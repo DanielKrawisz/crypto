@@ -12,7 +12,9 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #endif
 
-import std;
+#include <cstdint>
+#include <sstream>
+#include <string>
 
 /**
  * GetTimeMicros() and GetTimeMillis() both return the system time, but in
