@@ -2,9 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <sv/crypto/hmac_sha512.h>
-
 #include <cstring>
+
+#include <sv/crypto/hmac_sha512.h>
 
 CHMAC_SHA512::CHMAC_SHA512 (const data::byte *key, size_t keylen) {
     data::byte rkey[128];

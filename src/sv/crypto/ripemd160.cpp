@@ -2,11 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <cstring>
+
 #include <sv/crypto/ripemd160.h>
 
 #include <sv/crypto/common.h>
-
-#include <cstring>
 
 // Internal implementation code.
 namespace {

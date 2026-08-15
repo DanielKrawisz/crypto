@@ -20,6 +20,8 @@ add_executable (
     symmetric_crypto.cpp
     NIST_DRBG.cpp
     secret_share.cpp
+
+    elliptic_curve.cpp
 )
 
 target_link_libraries (unit_tests PRIVATE crypto Data::numbers gtest_main gmock)

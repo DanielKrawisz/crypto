@@ -5,9 +5,10 @@
 #ifndef BITCOIN_CRYPTO_COMMON_H
 #define BITCOIN_CRYPTO_COMMON_H
 
-#include <boost/endian/conversion.hpp>
+#include <cstdint>
+#include <cstring>
 
-import std;
+#include <boost/endian/conversion.hpp>
 
 #define ReadLE16(p) (boost::endian::endian_load<uint16_t, 2, boost::endian::order::little> (p))
 #define ReadLE32(p) (boost::endian::endian_load<uint32_t, 4, boost::endian::order::little> (p))

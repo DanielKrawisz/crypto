@@ -1,53 +1,53 @@
 find_package (PkgConfig)
-pkg_check_modules (PC_NET QUIET Net)
+pkg_check_modules (PC_CRYPTO QUIET Crypto)
 
-find_path(NET_INCLUDE_DIR
-NAMES net.hpp
-HINTS ENV NET_INC_DIR
-      ENV NET_DIR
-      $ENV{DATA_DIR}/include
-PATH_SUFFIXES include/net
-  DOC "The directory containing the Net header files"
+find_path(CRYPTO_INCLUDE_DIR
+NAMES crypto.hpp
+HINTS ENV CRYPTO_INC_DIR
+      ENV CRYPTO_DIR
+      $ENV{CRYPTO_DIR}/include
+PATH_SUFFIXES include/crypto
+  DOC "The directory containing the Crypto header files"
 )
 
-find_library (NET_LIBRARY NAMES data
-  HINTS ENV NET_LIB_DIR
-  ENV NET_DIR
-  $ENV{DATA_DIR}/lib
-  PATH_SUFFIXES lib/data
-  DOC "Path to the Net library"
+find_library (CRYPTO_LIBRARY NAMES crypto
+  HINTS ENV CRYPTO_LIB_DIR
+  ENV CRYPTO_DIR
+  $ENV{CRYPTO_DIR}/lib
+  PATH_SUFFIXES lib/crypto
+  DOC "Path to the Crypto library"
 )
 
-message (STATUS "${NET_INCLUDE_DIR}")
-if (NET_INCLUDE_DIR)
-    file (READ "${NET_INCLUDE_DIR}/net/version.hpp" ver)
-    string (REGEX MATCH "#define DATA_VERSION \"([0-9*.]*)\"" _ ${ver})
-    set (NET_VERSION ${CMAKE_MATCH_1})
+message (STATUS "${CRYPTO_INCLUDE_DIR}")
+if (CRYPTO_INCLUDE_DIR)
+    file (READ "${CRYPTO_INCLUDE_DIR}/crypto/version.hpp" ver)
+    string (REGEX MATCH "#define CRYPTO_VERSION \"([0-9*.]*)\"" _ ${ver})
+    set (CRYPTO_VERSION ${CMAKE_MATCH_1})
 endif ()
 
 include (FindPackageHandleStandardArgs)
-find_package_handle_standard_args (Net
-  FOUND_VAR NET_FOUND
+find_package_handle_standard_args (Crypto
+  FOUND_VAR CRYPTO_FOUND
   REQUIRED_VARS
-    NET_LIBRARY
-    NET_INCLUDE_DIR
-  VERSION_VAR NET_VERSION
+    CRYPTO_LIBRARY
+    CRYPTO_INCLUDE_DIR
+  VERSION_VAR CRYPTO_VERSION
 )
 
-if (NET_FOUND)
-  set (NET_LIBRARIES ${NET_LIBRARY})
-  set (NET_INCLUDE_DIRS ${NET_INCLUDE_DIR})
+if (CRYPTO_FOUND)
+  set (CRYPTO_LIBRARIES ${CRYPTO_LIBRARY})
+  set (CRYPTO_INCLUDE_DIRS ${CRYPTO_INCLUDE_DIR})
 endif ()
 
-if (NET_FOUND AND NOT TARGET Net::Net)
-  add_library (Net::Net UNKNOWN IMPORTED)
-  set_target_properties (Net::Net PROPERTIES
-    IMPORTED_LOCATION "${NET_LIBRARY}"
-    INTERFACE_INCLUDE_DIRECTORIES "${NET_INCLUDE_DIR}"
+if (CRYPTO_FOUND AND NOT TARGET Crypto::crypto)
+  add_library (Crypto::Crypto UNKNOWN IMPORTED)
+  set_target_properties (Crypto::Crypto PROPERTIES
+    IMPORTED_LOCATION "${CRYPTO_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${CRYPTO_INCLUDE_DIR}"
   )
 endif ()
 
 mark_as_advanced (
-  NET_INCLUDE_DIR
-  NET_LIBRARY
+  CRYPTO_INCLUDE_DIR
+  CRYPTO_LIBRARY
 )

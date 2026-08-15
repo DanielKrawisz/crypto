@@ -16,12 +16,14 @@ set_target_properties (crypto PROPERTIES
 target_include_directories (
   hash
 
+  PRIVATE ${CMAKE_SOURCE_DIR}/include
+
   INTERFACE
 
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated/>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated/>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
 target_sources (
@@ -124,21 +126,21 @@ include (CMakePackageConfigHelpers)
 
 # generate the config file that includes the exports
 configure_package_config_file (${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/dataConfig.cmake"
-  INSTALL_DESTINATION "lib/cmake/dataFunctions"
+  "${CMAKE_CURRENT_BINARY_DIR}/cryptoConfig.cmake"
+  INSTALL_DESTINATION "lib/cmake/cryptoFunctions"
   NO_SET_AND_CHECK_MACRO
   NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
 write_basic_package_version_file (
-  "${CMAKE_CURRENT_BINARY_DIR}/dataConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/cryptoConfigVersion.cmake"
   COMPATIBILITY AnyNewerVersion
 )
 
 install (FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/dataConfig.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/dataConfigVersion.cmake
-  DESTINATION lib/cmake/data
+  ${CMAKE_CURRENT_BINARY_DIR}/cryptoConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/cryptoConfigVersion.cmake
+  DESTINATION lib/cmake/crypto
 )
 
 set (CPACK_PACKAGE_VENDOR "Daniel Krawisz")

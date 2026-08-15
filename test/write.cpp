@@ -8,9 +8,9 @@
 #include <data/array.hpp>
 #include <data/numbers.hpp>
 
-#include <data/crypto/hash.hpp>
-#include <data/crypto/MAC.hpp>
-#include <data/crypto/MAC/HMAC.hpp>
+#include <crypto/hash.hpp>
+#include <crypto/MAC.hpp>
+#include <crypto/MAC/HMAC.hpp>
 
 namespace data {
 

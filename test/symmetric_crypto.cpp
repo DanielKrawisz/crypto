@@ -2,17 +2,18 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <gtest/gtest.h>
+
 #include <data/random.hpp>
-#include <data/crypto/hash.hpp>
-#include <data/crypto/block.hpp>
-#include <data/crypto/MAC/HMAC.hpp>
-#include <data/crypto/stream/cryptopp.hpp>
-#include <data/crypto/block/cryptopp.hpp>
-#include <data/crypto/NIST_DRBG.hpp>
 #include <data/tuple.hpp>
 #include <data/list.hpp>
 
-#include <gtest/gtest.h>
+#include <crypto/hash.hpp>
+#include <crypto/block.hpp>
+#include <crypto/MAC/HMAC.hpp>
+#include <crypto/stream/cryptopp.hpp>
+#include <crypto/block/cryptopp.hpp>
+#include <crypto/NIST_DRBG.hpp>
 
 namespace data::crypto {
 
