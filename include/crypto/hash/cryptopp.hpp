@@ -2,9 +2,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_HASH_CRYPTOPP
-#define DATA_CRYPTO_HASH_CRYPTOPP
+#ifndef CRYPTO_HASH_CRYPTOPP
+#define CRYPTO_HASH_CRYPTOPP
 
+// We use weak functions such as SHA1 and MD5.
+// These functions are still in widespread use
+// as regular hash functions.
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
 
 #include "cryptopp/cryptlib.h"
@@ -15,7 +18,7 @@
 
 #include <crypto/hash/functions.hpp>
 
-namespace data::crypto::hash::CryptoPP {
+namespace crypto::hash::CryptoPP {
     using namespace ::CryptoPP;
     
     template <class Transform, size_t digest_size, size_t block_size>
@@ -28,7 +31,7 @@ namespace data::crypto::hash::CryptoPP {
     
 }
 
-namespace data::crypto::hash {
+namespace crypto::hash {
     
 #ifndef USE_BITCOIND_HASH_FUNCTIONS
     struct SHA1 : CryptoPP::engine<CryptoPP::SHA1, 20, 64> {};
@@ -60,7 +63,7 @@ namespace data::crypto::hash {
     
 }
 
-namespace data::crypto {
+namespace crypto {
 
 #ifndef USE_BITCOIND_HASH_FUNCTIONS
     hash::digest160 inline SHA1 (byte_slice b) {

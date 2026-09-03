@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_BLOCK_CRYPTOPP
-#define DATA_CRYPTO_BLOCK_CRYPTOPP
+#ifndef CRYPTO_BLOCK_CRYPTOPP
+#define CRYPTO_BLOCK_CRYPTOPP
 
 #include <cryptopp/modes.h>
 
@@ -16,7 +16,7 @@
 
 #include <crypto/block/cipher.hpp>
 
-namespace data::crypto::cipher::block::CryptoPP {
+namespace crypto::cipher::block::CryptoPP {
     using namespace ::CryptoPP;
 
     // should conatin a typedef named type that returns the cryptopp type.
@@ -40,7 +40,7 @@ namespace data::crypto::cipher::block::CryptoPP {
 
 }
 
-namespace data::crypto::cipher::block::CryptoPP {
+namespace crypto::cipher::block::CryptoPP {
     template <>
     struct get_cipher_type<block::Rijndael> {
         using type = CryptoPP::Rijndael;
@@ -68,7 +68,7 @@ namespace data::crypto::cipher::block::CryptoPP {
 
 }
 
-namespace data::crypto::cipher::block {
+namespace crypto::cipher::block {
 
     template <size_t key_size> requires (key_size >= 16 && key_size <= 32 && key_size % 8 == 0)
     void inline Rijndael::encrypt (Rijndael::block_out out, const symmetric_key<key_size> &key, Rijndael::block_in in) {

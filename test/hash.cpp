@@ -4,13 +4,13 @@
 
 #include <gtest/gtest.h>
 
-#include <crypto/hash.hpp>
-
 #include <data/math/number/bytes.hpp>
 #include <data/list.hpp>
 #include <data/encoding/endian.hpp>
 
-namespace data {
+#include <crypto/hash.hpp>
+
+namespace crypto {
 
     // TODO include MD5
     struct SHA_test_case {

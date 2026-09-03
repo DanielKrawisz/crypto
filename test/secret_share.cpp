@@ -10,7 +10,7 @@
 #include <data/encoding/hex.hpp>
 #include <data/string.hpp>
 
-namespace data {
+namespace crypto {
     
     TEST (SecretShareTest, TestSecretShare) {
         

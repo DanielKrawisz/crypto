@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_HASH_BITCOIND
-#define DATA_CRYPTO_HASH_BITCOIND
+#ifndef CRYPTO_HASH_BITCOIND
+#define CRYPTO_HASH_BITCOIND
 
 #ifdef USE_BITCOIND_HASH_FUNCTIONS
 
@@ -13,7 +13,7 @@
 
 #include <crypto/hash/functions.hpp>
 
-namespace data::crypto::hash {
+namespace crypto::hash {
     
     struct SHA1 : CSHA1 {};
     
@@ -23,7 +23,7 @@ namespace data::crypto::hash {
     
 }
 
-namespace data::crypto {
+namespace crypto {
 
     hash::digest160 inline SHA1 (byte_slice b) {
         return hash::calculate<hash::SHA1> (b);

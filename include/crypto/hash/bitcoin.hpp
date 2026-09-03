@@ -2,13 +2,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_HASH_BITCOIN
-#define DATA_CRYPTO_HASH_BITCOIN
+#ifndef CRYPTO_HASH_BITCOIN
+#define CRYPTO_HASH_BITCOIN
 
 #include <crypto/hash/functions.hpp>
 
-namespace data::crypto::hash {
-    using namespace data;
+namespace crypto::hash {
     
     // Bitcoin hash 160 is difined to be RIPEMD_160 * SHA2_256
     template<> struct Bitcoin<20> {
@@ -66,7 +65,7 @@ namespace data::crypto::hash {
 
 }
 
-namespace data::crypto {
+namespace crypto {
 
     hash::digest160 inline Bitcoin_160 (byte_slice b) {
         return hash::calculate<hash::Bitcoin<20>> (b);

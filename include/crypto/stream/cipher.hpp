@@ -2,13 +2,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_STREAM_CYPHER
-#define DATA_CRYPTO_STREAM_CYPHER
+#ifndef CRYPTO_STREAM_CYPHER
+#define CRYPTO_STREAM_CYPHER
 
 #include <data/bytes.hpp>
 #include <data/arithmetic/complementary.hpp>
 
-namespace data::crypto::cipher::stream {
+namespace crypto::cipher::stream {
 
     // a block cipher mode takes a cipher to produce
     // a procedure that can be replied repeatedly to

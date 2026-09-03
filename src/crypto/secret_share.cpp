@@ -7,7 +7,7 @@
 
 #include <crypto/secret_share.hpp>
 
-namespace data::crypto {
+namespace crypto {
     
     cross<secret_share> secret_share_split (random::source &rand, const bytes &b, byte max, byte threshold) {
         using namespace CryptoPP;

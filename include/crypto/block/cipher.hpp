@@ -2,15 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_BLOCK_CIPHER
-#define DATA_CRYPTO_BLOCK_CIPHER
+#ifndef CRYPTO_BLOCK_CIPHER
+#define CRYPTO_BLOCK_CIPHER
 
 #include <data/bytes.hpp>
 
 #include <crypto/one_way.hpp>
 #include <crypto/encrypted.hpp>
 
-namespace data::crypto::cipher::block {
+namespace crypto::cipher::block {
 
     // a block cipher begins with a function and its invese which takes a key
     // and a block of fixed size and returns another fixed size block.

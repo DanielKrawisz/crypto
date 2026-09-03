@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_BLOCK_PADDING
-#define DATA_CRYPTO_BLOCK_PADDING
+#ifndef CRYPTO_BLOCK_PADDING
+#define CRYPTO_BLOCK_PADDING
 
 #include <cryptopp/filters.h>
 
@@ -13,11 +13,11 @@
 
 #include <crypto/block/mode.hpp>
 
-namespace data::crypto::cipher::block::CryptoPP {
+namespace crypto::cipher::block::CryptoPP {
     using namespace ::CryptoPP;
 }
 
-namespace data::crypto::cipher::block {
+namespace crypto::cipher::block {
     // padding scheme is the type, padding contains the values.
     using padding_scheme = CryptoPP::BlockPaddingSchemeDef::BlockPaddingScheme;
     using padding = CryptoPP::BlockPaddingSchemeDef;

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_NIST_DRBG
-#define DATA_CRYPTO_NIST_DRBG
+#ifndef CRYPTO_NIST_DRBG
+#define CRYPTO_NIST_DRBG
 
 #include <cryptopp/drbg.h>
 
@@ -18,7 +18,7 @@
 #include <crypto/block/cipher.hpp>
 #include <crypto/block/padding.hpp>
 
-namespace data::crypto::NIST {
+namespace crypto::NIST {
 
     template <typename engine> concept DRBG =
         random::DRBG<engine> && requires (byte_slice seed, byte_slice nonce, byte_slice personalization) {

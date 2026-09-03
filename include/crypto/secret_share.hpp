@@ -2,13 +2,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_SECRET_SHARE
-#define DATA_CRYPTO_SECRET_SHARE
+#ifndef CRYPTO_SECRET_SHARE
+#define CRYPTO_SECRET_SHARE
 
-#include <crypto/NIST_DRBG.hpp>
 #include <crypto/random.hpp>
 
-namespace data::crypto {
+namespace crypto {
     
     struct secret_share {
         byte Index;

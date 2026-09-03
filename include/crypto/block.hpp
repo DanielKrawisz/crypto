@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_BLOCK
-#define DATA_CRYPTO_BLOCK
+#ifndef CRYPTO_BLOCK
+#define CRYPTO_BLOCK
 
 #include <data/tools/lazy_writer.hpp>
 
@@ -11,7 +11,7 @@
 #include <crypto/block/mode.hpp>
 #include <crypto/block/padding.hpp>
 
-namespace data::crypto {
+namespace crypto {
 
     template <typename Cipher, cipher::block::mode mode, auto ...mode_params> struct block_cipher;
 
@@ -24,7 +24,7 @@ namespace data::crypto {
     bytes decrypt (const block_cipher<Cipher, mode, mode_params...> &algorithm, const symmetric_key<key_size> &key, const bytes &plaintext);
 }
 
-namespace data::crypto::cipher {
+namespace crypto::cipher {
 
     template <direction dir, typename Cipher, cipher::block::mode mode, size_t key_size, auto ...mode_params>
     struct reader<dir, block_cipher<Cipher, mode, mode_params...>, key_size>;
@@ -34,7 +34,7 @@ namespace data::crypto::cipher {
 
 }
 
-namespace data::crypto {
+namespace crypto {
 
     namespace {
         template <cipher::block::mode mode, size_t block_size, auto ...mode_params> struct get_mode_state {
@@ -86,7 +86,7 @@ namespace data::crypto {
     }
 }
 
-namespace data::crypto::cipher {
+namespace crypto::cipher {
 
     // we require padding schemes that enable identification of the end
     // of the message. Valid padding schemes are ONE_AND_ZEROS_PADDING,
@@ -162,7 +162,7 @@ namespace data::crypto::cipher {
 
 }
 
-namespace data::crypto {
+namespace crypto {
 
     template <typename Cipher, cipher::block::mode Mode, auto ...mode_params> template <size_t key_size>
     bytes block_cipher<Cipher, Mode, mode_params...>::encrypt (const symmetric_key<key_size> &k, byte_slice plaintext) const {

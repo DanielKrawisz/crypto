@@ -12,49 +12,46 @@
 #include <crypto/MAC.hpp>
 #include <crypto/MAC/HMAC.hpp>
 
-namespace data {
+namespace crypto::hash {
 
-    namespace crypto::hash {
+    // we don't have to test that the hash is correct, just that the interface works.
+    TEST (Write, Hash) {
 
-        // we don't have to test that the hash is correct, just that the interface works.
-        TEST (Write, Hash) {
+        // write a list of bytes
+        EXPECT_NO_THROW (write<MD5> ());
+        EXPECT_NO_THROW ((write<MD5> (byte (0x76))));
+        EXPECT_NO_THROW ((write<MD5> (byte (0x76), byte (0x01))));
+        EXPECT_NO_THROW ((write<MD5> (byte (0x76), uint32_little (12))));
 
-            // write a list of bytes
-            EXPECT_NO_THROW (write<MD5> ());
-            EXPECT_NO_THROW ((write<MD5> (byte (0x76))));
-            EXPECT_NO_THROW ((write<MD5> (byte (0x76), byte (0x01))));
-            EXPECT_NO_THROW ((write<MD5> (byte (0x76), uint32_little (12))));
+        // write to bytes with function
+        EXPECT_NO_THROW (write<MD5> ([](auto &&w) {}));
+        EXPECT_NO_THROW ((write<MD5> ([](auto &&w) { w << byte (0x76); })));
+        EXPECT_NO_THROW ((write<MD5> ([](auto &&w) { w << byte (0x76) << byte (0x01); })));
+        EXPECT_NO_THROW ((write<MD5> ([](auto &&w) { w << byte (0x76) << uint32_little (12); })));
 
-            // write to bytes with function
-            EXPECT_NO_THROW (write<MD5> ([](auto &&w) {}));
-            EXPECT_NO_THROW ((write<MD5> ([](auto &&w) { w << byte (0x76); })));
-            EXPECT_NO_THROW ((write<MD5> ([](auto &&w) { w << byte (0x76) << byte (0x01); })));
-            EXPECT_NO_THROW ((write<MD5> ([](auto &&w) { w << byte (0x76) << uint32_little (12); })));
-
-        }
     }
-
-    namespace crypto::MAC {
-
-        TEST (Write, HMAC) {
-
-            const symmetric_key<5> key {encoding::hex::fixed<5> {"abcdef0102"}};
-
-            // write a list of bytes
-            EXPECT_NO_THROW (write<HMAC<hash::MD5>> (key));
-            EXPECT_NO_THROW ((write<HMAC<hash::MD5>> (key, byte (0x76))));
-            EXPECT_NO_THROW ((write<HMAC<hash::MD5>> (key, byte (0x76), byte (0x01))));
-            EXPECT_NO_THROW ((write<HMAC<hash::MD5>> (key, byte (0x76), uint32_little (12))));
-
-            // write to bytes with function
-            EXPECT_NO_THROW (write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) {}));
-            EXPECT_NO_THROW ((write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) { w << byte (0x76); })));
-            EXPECT_NO_THROW ((write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) { w << byte (0x76) << byte (0x01); })));
-            EXPECT_NO_THROW ((write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) { w << byte (0x76) << uint32_little (12); })));
-
-        }
-    }
-
 }
+
+namespace crypto::MAC {
+
+    TEST (Write, HMAC) {
+
+        const symmetric_key<5> key {encoding::hex::fixed<5> {"abcdef0102"}};
+
+        // write a list of bytes
+        EXPECT_NO_THROW (write<HMAC<hash::MD5>> (key));
+        EXPECT_NO_THROW ((write<HMAC<hash::MD5>> (key, byte (0x76))));
+        EXPECT_NO_THROW ((write<HMAC<hash::MD5>> (key, byte (0x76), byte (0x01))));
+        EXPECT_NO_THROW ((write<HMAC<hash::MD5>> (key, byte (0x76), uint32_little (12))));
+
+        // write to bytes with function
+        EXPECT_NO_THROW (write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) {}));
+        EXPECT_NO_THROW ((write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) { w << byte (0x76); })));
+        EXPECT_NO_THROW ((write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) { w << byte (0x76) << byte (0x01); })));
+        EXPECT_NO_THROW ((write<writer<HMAC<hash::MD5>>> (key, [](auto &&w) { w << byte (0x76) << uint32_little (12); })));
+
+    }
+}
+
 
 

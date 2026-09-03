@@ -10,7 +10,7 @@
 #include <data/tuple.hpp>
 #include <data/list.hpp>
 
-namespace data::crypto {
+namespace crypto {
 
     template <typename R>
     void test_instantiate_and_reseed () {

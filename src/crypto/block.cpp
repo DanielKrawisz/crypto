@@ -1,7 +1,7 @@
 
 #include <crypto/block.hpp>
 
-namespace data::crypto::cipher::block {
+namespace crypto::cipher::block {
 
     data::writer<byte> &add_padding (data::writer<byte> &next, padding_scheme p, size_t block_size, size_t bytes_written) {
 

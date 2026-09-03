@@ -18,7 +18,7 @@ private:
 public:
     constexpr static const size_t DigestSize = 32;
     constexpr static const size_t BlockSize = 64;
-    constexpr static const data::crypto::security Security = data::crypto::security::modern;
+    constexpr static const crypto::security Security = crypto::security::modern;
 
     CSHA256 ();
     CSHA256 &Update (const uint8_t *data, size_t len);

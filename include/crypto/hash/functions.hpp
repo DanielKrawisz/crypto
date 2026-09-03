@@ -2,18 +2,18 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_HASH_FUNCTIONS
-#define DATA_CRYPTO_HASH_FUNCTIONS
+#ifndef CRYPTO_HASH_FUNCTIONS
+#define CRYPTO_HASH_FUNCTIONS
 
 #include <data/hash.hpp>
 
 #include <crypto/one_way.hpp>
 
-namespace data::crypto::hash {
+namespace crypto::hash {
     using namespace data::hash;
 }
 
-namespace data::crypto {
+namespace crypto {
 
     // supported hash functions.
 
@@ -64,7 +64,7 @@ namespace data::crypto {
 
 }
 
-namespace data::crypto::hash {
+namespace crypto::hash {
 
     template <typename W>
     concept Writer = data::hash::Writer<W> && requires {
@@ -99,7 +99,7 @@ namespace data::crypto::hash {
 
 }
 
-namespace data::crypto {
+namespace crypto {
 
     hash::digest160 inline SHA1 (string_view b) {
         return SHA1 (byte_slice {(const byte *) (b.data ()), b.size ()});

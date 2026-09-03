@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_CIPHER
-#define DATA_CRYPTO_CIPHER
+#ifndef CRYPTO_CIPHER
+#define CRYPTO_CIPHER
 
 #include <data/array.hpp>
 /*
@@ -212,7 +212,8 @@
  * ===============================================================================
  */
 
-namespace data::crypto::cipher {
+namespace crypto::cipher {
+    using namespace data;
 
     enum direction {
         encryption,

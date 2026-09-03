@@ -2,12 +2,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_ONE_WAY
-#define DATA_CRYPTO_ONE_WAY
+#ifndef CRYPTO_ONE_WAY
+#define CRYPTO_ONE_WAY
 
 #include <data/function.hpp>
 
-namespace data::crypto {
+namespace crypto {
+    using namespace data;
     
     enum class security : byte {
         none = 0,

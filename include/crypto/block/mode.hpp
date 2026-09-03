@@ -2,15 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_BLOCK_MODE
-#define DATA_CRYPTO_BLOCK_MODE
+#ifndef CRYPTO_BLOCK_MODE
+#define CRYPTO_BLOCK_MODE
 
 #include <data/arithmetic/complementary.hpp>
 
 #include <crypto/cipher.hpp>
 #include <crypto/block/cipher.hpp>
 
-namespace data::crypto::cipher::block {
+namespace crypto::cipher::block {
 
 /*  -------------------------------------------------------------------
  *  BLOCK CIPHER MODES

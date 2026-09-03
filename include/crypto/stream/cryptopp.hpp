@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_STREAM_CRYPTOPP
-#define DATA_CRYPTO_STREAM_CRYPTOPP
+#ifndef CRYPTO_STREAM_CRYPTOPP
+#define CRYPTO_STREAM_CRYPTOPP
 
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/secblock.h>
@@ -25,7 +25,7 @@
 #include <crypto/block/mode.hpp>
 #include <crypto/block/padding.hpp>
 
-namespace data::crypto::cipher::stream {
+namespace crypto::cipher::stream {
 
     template <std::derived_from<CryptoPP::StreamTransformation> cppstream>
     struct cryptopp_stream : data::reader<byte> {
@@ -119,7 +119,7 @@ namespace data::crypto::cipher::stream {
     };
 }
 
-namespace data::crypto {
+namespace crypto {
 
     template <typename stream, size_t key_size, size_t iv_size> requires
     std::derived_from<stream, CryptoPP::StreamTransformation> &&

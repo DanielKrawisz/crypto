@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_RANDOM
-#define DATA_CRYPTO_RANDOM
+#ifndef CRYPTO_RANDOM
+#define CRYPTO_RANDOM
 
 #include <cryptopp/osrng.h>
 #include <cryptopp/secblock.h>
@@ -15,7 +15,7 @@
 
 #include <crypto/NIST_DRBG.hpp>
 
-namespace data::crypto::random {
+namespace crypto::random {
     using namespace data::random;
 
     template <typename engine> concept DRBG =

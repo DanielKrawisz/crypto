@@ -18,7 +18,7 @@ private:
 public:
     constexpr static const size_t DigestSize = 20;
     constexpr static const size_t BlockSize = 64;
-    constexpr static const data::crypto::security Security = data::crypto::security::modern;
+    constexpr static const crypto::security Security = crypto::security::modern;
 
     CRIPEMD160 ();
     CRIPEMD160 &Update (const data::byte *data, size_t len);

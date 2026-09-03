@@ -2,14 +2,14 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_MAC
-#define DATA_CRYPTO_MAC
+#ifndef CRYPTO_MAC
+#define CRYPTO_MAC
 
 #include <data/hash.hpp>
 
 #include <crypto/encrypted.hpp>
 
-namespace data::crypto::MAC {
+namespace crypto::MAC {
 
     template <typename W, size_t key_size>
     concept Writer = requires (typename W::digest &d, symmetric_key<key_size> key) {

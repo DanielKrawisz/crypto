@@ -3,13 +3,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_MAC_HMAC
-#define DATA_CRYPTO_MAC_HMAC
+#ifndef CRYPTO_MAC_HMAC
+#define CRYPTO_MAC_HMAC
 
 #include <crypto/hash.hpp>
 #include <crypto/encrypted.hpp>
 
-namespace data::crypto {
+namespace crypto {
 
     template <hash::Engine engine>
     requires requires { engine::BlockSize; }

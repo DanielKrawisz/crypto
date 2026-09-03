@@ -15,7 +15,7 @@
 #include <crypto/block/cryptopp.hpp>
 #include <crypto/NIST_DRBG.hpp>
 
-namespace data::crypto {
+namespace crypto {
 
     // we don't test that things actually work, merely that all the functions are implemented and no errors are thrown.
 
@@ -115,7 +115,7 @@ namespace data::crypto {
     // TODO test KMAC
 }
 
-namespace data::crypto::cipher::block {
+namespace crypto::cipher::block {
 
     // Invalid key and block sizes for a given algorithm should
     // fail to compile, and valid ones should succeed.
@@ -198,7 +198,7 @@ namespace data::crypto::cipher::block {
             bytes pt = *encoding::hex::read (plaintext);
 
             // we test this against the function for encrypting whole messages rather than just blocks.
-            auto padded = data::crypto::encrypt (bc {ivs...}, k, pt);
+            auto padded = crypto::encrypt (bc {ivs...}, k, pt);
 
             // we should expect the encrypted message to have a whole block of padding.
             //EXPECT_EQ (padded.size (), pt.size () + 16);
@@ -206,7 +206,7 @@ namespace data::crypto::cipher::block {
             bytes ct = *encoding::hex::read (ciphertext);
             EXPECT_EQ (ct, (take (padded, pt.size ())));
 
-            auto decrypted = data::crypto::decrypt (bc {ivs...}, k, padded);
+            auto decrypted = crypto::decrypt (bc {ivs...}, k, padded);
 
             EXPECT_EQ (pt, decrypted) << "expected plaintext " << pt << " to equal decrypted " << decrypted;
 
@@ -513,7 +513,7 @@ namespace data::crypto::cipher::block {
     }
 }
 
-namespace data::crypto::cipher {
+namespace crypto::cipher {
 
     // At this point we can say that the AES candidates work and that the block modes mostly work.
 
@@ -560,7 +560,7 @@ namespace data::crypto::cipher {
 
 }
 
-namespace data::crypto::cipher::block {
+namespace crypto::cipher::block {
 
     template <mode m, auto ...rest> struct block_mode {
         constexpr static const mode Mode = m;
@@ -602,7 +602,7 @@ namespace data::crypto::cipher::block {
     template <typename algorithm, size_t key_size>
     void test_block_decrypt_succeed (const algorithm &m, const symmetric_key<key_size> &key, const bytes &ciphertext, const bytes &plaintext) {
         if (!m.valid ()) return;
-        bytes decrypted = data::crypto::decrypt (m, key, ciphertext);
+        bytes decrypted = crypto::decrypt (m, key, ciphertext);
         EXPECT_EQ (plaintext, decrypted) << "tried to decrypt to " << plaintext << " but got " << decrypted;
     }
 
@@ -612,7 +612,7 @@ namespace data::crypto::cipher::block {
         // we may fail because we throw invalid padding or because
         // the decrypted text does not match, depending on the options.
         try {
-            bytes decrypted = data::crypto::decrypt (m, key, ciphertext);
+            bytes decrypted = crypto::decrypt (m, key, ciphertext);
             EXPECT_NE (plaintext, decrypted);
         } catch (exception &) {}
     }
@@ -933,7 +933,7 @@ namespace data::crypto::cipher::block {
     }
 }
 
-namespace data::crypto::cipher {
+namespace crypto::cipher {
 
     ciphers<stream::XChaCha20, stream::XSalsa20, stream::Salsa20,
         stream::HC128, stream::HC256, stream::Panama,
