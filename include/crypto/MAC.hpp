@@ -45,10 +45,10 @@ namespace crypto::MAC {
     }
 
     // make a writer out of an engine.
-    template <typename W>
+    template <typename E>
     struct writer : data::writer<byte> {
-        using digest = hash::digest<W::DigestSize>;
-        template <size_t key_size> requires Engine<W, key_size>
+        using digest = hash::digest<E::DigestSize>;
+        template <size_t key_size> requires Engine<E, key_size>
         writer (digest &d, const symmetric_key<key_size> &key) noexcept: Digest {d}, MAC {key} {}
 
         void write (const byte *b, size_t bytes) noexcept final override {
@@ -66,7 +66,7 @@ namespace crypto::MAC {
 
     private:
         digest &Digest;
-        W MAC;
+        E MAC;
     };
 
     // attach a mack to every message.

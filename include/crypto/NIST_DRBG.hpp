@@ -65,7 +65,9 @@ namespace crypto::NIST {
     // Hash functions are used in Hash_DRBG and HMAC_DRBG,
     // and the block ciphers are used in CTR_DRBG.
     template <typename H> concept Approved =
-        Same<H, hash::SHA1> || // depricated
+        Same<H, hash::SHA1> || // It's still ok to use SHA1 for random
+                               // number generation even though it's
+                               // depricated as a hash algorithm.
         Same<H, hash::SHA2_224> || Same<H, hash::SHA2_256> ||
         Same<H, hash::SHA2_384> || Same<H, hash::SHA2_512> ||
         // TODO
@@ -180,11 +182,11 @@ namespace crypto::NIST {
     template <hash::Engine H>
     struct HMAC_DRBG : NIST_DRBG<H> {
 
+        HMAC_DRBG (byte_slice entropy, byte_slice nonce = {}, byte_slice personalization = {});
+
         void generate (byte *b, size_t x, byte_slice additional = {}) final override;
 
         void reseed (byte_slice entropy, byte_slice additional = {}) final override;
-
-        HMAC_DRBG (byte_slice entropy, byte_slice nonce = {}, byte_slice personalization = {});
 
         ~HMAC_DRBG () {}
 
@@ -445,7 +447,7 @@ namespace crypto::NIST {
 
         bytes result = write<bytes> ([this, size] (auto &&w) {
             do {
-                this->V = MAC::calculate<HMAC<H>> (this->Key, this->V);
+                this->V = MAC::calculate<MAC::HMAC<H>> (this->Key, this->V);
                 w << this->V;
             } while (w.TotalSize < size);
         });
@@ -519,20 +521,20 @@ namespace crypto::NIST {
     template <hash::Engine H>
     void HMAC_DRBG<H>::update (byte_slice data) {
         {
-            MAC::writer<HMAC<H>> w {Key, Key};
+            MAC::writer<MAC::HMAC<H>> w {Key, Key};
             w << V << byte (0x00) << data;
         }
 
-        V = MAC::calculate<HMAC<H>> (Key, V);
+        V = MAC::calculate<MAC::HMAC<H>> (Key, V);
 
         if (data.size () == 0) return;
 
         {
-            MAC::writer<HMAC<H>> w {Key, Key};
+            MAC::writer<MAC::HMAC<H>> w {Key, Key};
             w << V << byte (0x01) << data;
         }
 
-        V = MAC::calculate<HMAC<H>> (Key, V);
+        V = MAC::calculate<MAC::HMAC<H>> (Key, V);
     }
 
     template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>

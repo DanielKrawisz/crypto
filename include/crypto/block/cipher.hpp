@@ -166,6 +166,7 @@ namespace crypto::cipher::block {
             DES_set_parity (new_key[i]);
             old_key <<= 7;
         }
+
         return new_key;
     }
 

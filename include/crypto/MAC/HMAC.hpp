@@ -6,10 +6,9 @@
 #ifndef CRYPTO_MAC_HMAC
 #define CRYPTO_MAC_HMAC
 
-#include <crypto/hash.hpp>
-#include <crypto/encrypted.hpp>
+#include <crypto/MAC.hpp>
 
-namespace crypto {
+namespace crypto::MAC {
 
     template <hash::Engine engine>
     requires requires { engine::BlockSize; }
@@ -25,39 +24,14 @@ namespace crypto {
         engine outer;
 
         template <size_t key_size>
-        void pads_from_key (slice<const byte, key_size> key) {
-            byte K[BlockSize];
-
-            int begin_pad;
-
-            // If key_size > block_size
-            // hash the key
-            // copy digest into K0
-            if (key_size > BlockSize) {
-                engine g {};
-                g.Update (key.data (), key_size);
-                g.Final (K);
-                begin_pad = DigestSize;
-            // else copy key into K0
-            } else {
-                std::copy (key.begin (), key.end (), K);
-                begin_pad = key_size;
-            }
-            // zero pad the rest.
-            for (int i = begin_pad; i < BlockSize; i++) K[i] = 0;
-
-            for (int i = 0; i < BlockSize; i++) {
-                ipad[i] = K[i] ^ 0x36;
-                opad[i] = K[i] ^ 0x5c;
-            }
-        }
+        void pads_from_key (slice<const byte, key_size> key);
 
         void initialize () {
             inner.Update (ipad, BlockSize);
             outer.Update (opad, BlockSize);
         }
-    public:
 
+    public:
         template <size_t key_size>
         HMAC (const symmetric_key<key_size> &key) {
             pads_from_key<key_size> (key);
@@ -84,6 +58,49 @@ namespace crypto {
 
     };
 
+}
+
+namespace crypto {
+
+    template <hash::Engine engine, size_t key_size>
+    requires requires { engine::BlockSize; }
+    auto inline HMAC (const symmetric_key<key_size> &key, byte_slice data) {
+        return MAC::calculate<MAC::HMAC<engine>> (key, data);
+    }
+
+}
+
+namespace crypto::MAC {
+
+    template <hash::Engine engine>
+    requires requires { engine::BlockSize; }
+    template <size_t key_size>
+    void HMAC<engine>::pads_from_key (slice<const byte, key_size> key) {
+        byte K[BlockSize];
+
+        int begin_pad;
+
+        // If key_size > block_size
+        // hash the key
+        // copy digest into K0
+        if (key_size > BlockSize) {
+            engine g {};
+            g.Update (key.data (), key_size);
+            g.Final (K);
+            begin_pad = DigestSize;
+            // else copy key into K0
+        } else {
+            std::copy (key.begin (), key.end (), K);
+            begin_pad = key_size;
+        }
+        // zero pad the rest.
+        for (int i = begin_pad; i < BlockSize; i++) K[i] = 0;
+
+        for (int i = 0; i < BlockSize; i++) {
+            ipad[i] = K[i] ^ 0x36;
+            opad[i] = K[i] ^ 0x5c;
+        }
+    }
 }
 
 #endif

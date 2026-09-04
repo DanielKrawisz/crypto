@@ -211,9 +211,11 @@
  *
  * ===============================================================================
  */
+namespace crypto {
+    using namespace data;
+}
 
 namespace crypto::cipher {
-    using namespace data;
 
     enum direction {
         encryption,

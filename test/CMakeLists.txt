@@ -16,7 +16,10 @@ add_executable (
     # hash
     hash.cpp
 
-    # crypto
+    # key derivation
+    key_derivation.cpp
+
+    # symmetric crypto
     symmetric_crypto.cpp
     NIST_DRBG.cpp
     secret_share.cpp
