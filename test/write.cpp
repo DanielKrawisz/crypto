@@ -36,7 +36,7 @@ namespace crypto::MAC {
 
     TEST (Write, HMAC) {
 
-        const symmetric_key<5> key {encoding::hex::fixed<5> {"abcdef0102"}};
+        const cipher::symmetric_key<5> key {encoding::hex::fixed<5> {"abcdef0102"}};
 
         // write a list of bytes
         EXPECT_NO_THROW (write<HMAC<hash::MD5>> (key));

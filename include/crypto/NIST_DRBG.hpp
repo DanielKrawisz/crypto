@@ -206,7 +206,7 @@ namespace crypto::NIST {
         constexpr const static size_t SeedLength = C::BlockSize + (Same<C, cipher::block::TDEA3> ? 21 : key_size);
 
         math::uint<r, C::BlockSize, byte> V;
-        symmetric_key<key_size> Key;
+        cipher::symmetric_key<key_size> Key;
         uint32 ReseedCounter;
 
         void update (const byte_array<SeedLength> &);
@@ -541,7 +541,7 @@ namespace crypto::NIST {
     struct CTR_DRBG<key_size, C, true, r>::BCC_writer final : data::writer<byte> {
         using digest = hash::digest<C::BlockSize>;
         digest &Output;
-        symmetric_key<key_size> Key;
+        cipher::symmetric_key<key_size> Key;
         size_t Index;
 
         BCC_writer (digest &d);
@@ -580,7 +580,7 @@ namespace crypto::NIST {
     CTR_DRBG<key_size, C, true, r>::df (byte_slice input) {
 
         byte_array<C::BlockSize> X;
-        symmetric_key<key_size> K;
+        cipher::symmetric_key<key_size> K;
 
         {
 

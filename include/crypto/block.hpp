@@ -17,11 +17,16 @@ namespace crypto {
 
     template <typename Cipher, cipher::block::mode mode, auto ...mode_params, size_t key_size>
     requires cipher::block::Cipher<Cipher, key_size>
-    bytes encrypt (const block_cipher<Cipher, mode, mode_params...> &algorithm, const symmetric_key<key_size> &key, const bytes &plaintext);
+    bytes encrypt (
+        const block_cipher<Cipher, mode, mode_params...> &algorithm,
+        const cipher::symmetric_key<key_size> &key, const bytes &plaintext);
 
     template <typename Cipher, cipher::block::mode mode, auto ...mode_params, size_t key_size>
     requires cipher::block::Cipher<Cipher, key_size>
-    bytes decrypt (const block_cipher<Cipher, mode, mode_params...> &algorithm, const symmetric_key<key_size> &key, const bytes &plaintext);
+    bytes decrypt (
+        const block_cipher<Cipher, mode, mode_params...> &algorithm,
+        const cipher::symmetric_key<key_size> &key, const bytes &plaintext);
+
 }
 
 namespace crypto::cipher {
@@ -62,8 +67,8 @@ namespace crypto {
         constexpr block_cipher (cipher::block::padding_scheme p = cipher::block::padding::DEFAULT_PADDING):
         mode_state<Mode, Cipher::BlockSize, mode_params...> {}, Padding {p} {}
 
-        template <size_t key_size> bytes encrypt (const symmetric_key<key_size> &k, byte_slice plaintext) const;
-        template <size_t key_size> bytes decrypt (const symmetric_key<key_size> &k, byte_slice ciphertext) const;
+        template <size_t key_size> bytes encrypt (const cipher::symmetric_key<key_size> &k, byte_slice plaintext) const;
+        template <size_t key_size> bytes decrypt (const cipher::symmetric_key<key_size> &k, byte_slice ciphertext) const;
 
         bool valid () const {
             return is_streamable (Mode) || Padding != cipher::block::padding::NO_PADDING;
@@ -75,13 +80,19 @@ namespace crypto {
 
     template <typename Cipher, cipher::block::mode mode, auto ...mode_params, size_t key_size>
     requires cipher::block::Cipher<Cipher, key_size>
-    bytes inline encrypt (const block_cipher<Cipher, mode, mode_params...> &algorithm, const symmetric_key<key_size> &key, const bytes &plaintext) {
+    bytes inline encrypt (
+        const block_cipher<Cipher, mode, mode_params...> &algorithm,
+        const cipher::symmetric_key<key_size> &key,
+        const bytes &plaintext) {
         return algorithm.encrypt (key, plaintext);
     }
 
     template <typename Cipher, cipher::block::mode mode, auto ...mode_params, size_t key_size>
     requires cipher::block::Cipher<Cipher, key_size>
-    bytes inline decrypt (const block_cipher<Cipher, mode, mode_params...> &algorithm, const symmetric_key<key_size> &key, const bytes &plaintext) {
+    bytes inline decrypt (
+        const block_cipher<Cipher, mode, mode_params...> &algorithm,
+        const cipher::symmetric_key<key_size> &key,
+        const bytes &plaintext) {
         return algorithm.decrypt (key, plaintext);
     }
 }
@@ -117,7 +128,7 @@ namespace crypto::cipher {
 
         writer (
             const block_cipher<Cipher, mode, mode_params...> &algorithm,
-            const symmetric_key<key_size> &k,
+            const cipher::symmetric_key<key_size> &k,
             data::writer<byte> &next): Encryptor {algorithm, k, next}, Padding {validate_padding<mode> (algorithm.Padding)} {}
 
         void write (const byte *b, size_t size) final override {
@@ -139,7 +150,7 @@ namespace crypto::cipher {
 
         reader (
             const block_cipher<Cipher, mode, mode_params...> &algorithm,
-            const symmetric_key<key_size> &k, data::reader<byte> &prev):
+            const cipher::symmetric_key<key_size> &k, data::reader<byte> &prev):
             Decryptor {algorithm, k, prev}, Padding {validate_padding<mode> (algorithm.Padding)} {}
 
         void read (byte *b, size_t size) final override {
@@ -165,7 +176,9 @@ namespace crypto::cipher {
 namespace crypto {
 
     template <typename Cipher, cipher::block::mode Mode, auto ...mode_params> template <size_t key_size>
-    bytes block_cipher<Cipher, Mode, mode_params...>::encrypt (const symmetric_key<key_size> &k, byte_slice plaintext) const {
+    bytes block_cipher<Cipher, Mode, mode_params...>::encrypt (
+        const cipher::symmetric_key<key_size> &k,
+        byte_slice plaintext) const {
         bytes ciphertext;
 
         {
@@ -178,7 +191,9 @@ namespace crypto {
     }
 
     template <typename Cipher, cipher::block::mode Mode, auto ...v> template <size_t key_size>
-    bytes block_cipher<Cipher, Mode, v...>::decrypt (const symmetric_key<key_size> &k, byte_slice ciphertext) const {
+    bytes block_cipher<Cipher, Mode, v...>::decrypt (
+        const cipher::symmetric_key<key_size> &k,
+        byte_slice ciphertext) const {
         auto p = cipher::validate_padding<Mode> (Padding);
 
         bytes plaintext;

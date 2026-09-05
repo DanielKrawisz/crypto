@@ -8,7 +8,6 @@
 #include <data/bytes.hpp>
 
 #include <crypto/one_way.hpp>
-#include <crypto/encrypted.hpp>
 
 namespace crypto::cipher::block {
 

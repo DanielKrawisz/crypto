@@ -21,6 +21,7 @@ The library provides cryptographic hash functions, message authentication codes,
 * [Message authentication codes](#message-authentication-codes)
 
   * HMAC
+  * CMAC
 * [Key derivation](#key-derivation-functions)
 
   * PKCS5_PBKDF2_HMAC
@@ -367,7 +368,7 @@ Message Authentication Codes (MACs) provide a keyed cryptographic digest of a me
 
 The MAC interface is designed to be composable in the same way as the hash interface. MAC algorithms are available as direct functions in the `crypto` namespace and as composable types in `crypto::MAC`.
 
-Currently, Crypto provides HMAC. Additional MAC constructions, such as KMAC, can use the same interface when they are added.
+Currently, Crypto provides HMAC and CMAC. Additional MAC constructions, such as KMAC, can use the same interface when they are added.
 
 ### Symmetric Keys
 

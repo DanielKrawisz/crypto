@@ -1,4 +1,3 @@
-
 // Copyright (c) 2024-2025 Daniel Krawisz
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -6,6 +5,7 @@
 #ifndef CRYPTO_MAC_HMAC
 #define CRYPTO_MAC_HMAC
 
+#include <crypto/cipher.hpp>
 #include <crypto/MAC.hpp>
 
 namespace crypto::MAC {
@@ -33,7 +33,7 @@ namespace crypto::MAC {
 
     public:
         template <size_t key_size>
-        HMAC (const symmetric_key<key_size> &key) {
+        HMAC (const cipher::symmetric_key<key_size> &key) {
             pads_from_key<key_size> (key);
             initialize ();
         }
@@ -64,7 +64,7 @@ namespace crypto {
 
     template <hash::Engine engine, size_t key_size>
     requires requires { engine::BlockSize; }
-    auto inline HMAC (const symmetric_key<key_size> &key, byte_slice data) {
+    auto inline HMAC (const cipher::symmetric_key<key_size> &key, byte_slice data) {
         return MAC::calculate<MAC::HMAC<engine>> (key, data);
     }
 

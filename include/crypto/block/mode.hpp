@@ -6,6 +6,7 @@
 #define CRYPTO_BLOCK_MODE
 
 #include <data/arithmetic/complementary.hpp>
+#include <data/integral.hpp>
 
 #include <crypto/cipher.hpp>
 #include <crypto/block/cipher.hpp>
@@ -219,8 +220,8 @@ namespace crypto::cipher::block {
         constexpr static const mode Mode = mode::CBC;
         constexpr const static size_t BlockSize = block_size;
 
-        initialization_vector<block_size> IV;
-        state (const initialization_vector<block_size> &iv): IV {iv} {}
+        initialization_vector<block_size> State;
+        state (const initialization_vector<block_size> &iv): State {iv} {}
 
         using block_in = slice<const byte, block_size>;
         using block_out = slice<byte, block_size>;
@@ -229,17 +230,17 @@ namespace crypto::cipher::block {
         requires Cipher<cipher, key_size> && (block_size == cipher::BlockSize)
         void encrypt (block_out o, const symmetric_key<key_size> &key, block_in i) {
             byte_array<block_size> xored;
-            arithmetic::bit_xor<byte> (xored.begin (), xored.end (), i.data (), IV.data ());
+            arithmetic::bit_xor<byte> (xored.begin (), xored.end (), i.data (), State.data ());
             cipher::encrypt (o, key, xored);
-            std::copy (o.begin (), o.end (), IV.begin ());
+            std::copy (o.begin (), o.end (), State.begin ());
         }
 
         template <typename cipher, size_t key_size>
         requires Cipher<cipher, key_size> && (block_size == cipher::BlockSize)
         void decrypt (block_out o, const symmetric_key<key_size> &key, block_in i) {
             cipher::decrypt (o, key, i);
-            arithmetic::bit_xor<byte> (o.begin (), o.end (), o.data (), IV.data ());
-            std::copy (i.begin (), i.end (), IV.begin ());
+            arithmetic::bit_xor<byte> (o.begin (), o.end (), o.data (), State.data ());
+            std::copy (i.begin (), i.end (), State.begin ());
         }
     };
 
