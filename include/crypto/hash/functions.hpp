@@ -17,6 +17,14 @@ namespace crypto {
 
     // supported hash functions.
 
+    // not cryptographically secure, but fast and standard.
+    uint32_little CRC32 (byte_slice);
+    uint32_little CRC32 (string_view);
+
+    uint32_little CRC32C (byte_slice);
+    uint32_little CRC32C (string_view);
+
+    // SHA1 and MD5 are depricated but still standard when security is not a big concern.
     hash::digest160 SHA1 (byte_slice);
     hash::digest160 SHA1 (string_view);
 
@@ -73,6 +81,7 @@ namespace crypto::hash {
     
     // All of these satisfy hash::Engine.
     struct SHA1;
+    struct MD5;
     template <size_t digest_size> struct RIPEMD;
     template <size_t ...> struct SHA2;
     template <size_t digest_size> struct SHA3;
@@ -100,6 +109,14 @@ namespace crypto::hash {
 }
 
 namespace crypto {
+
+    uint32_little inline CRC32 (string_view b) {
+        return CRC32 (byte_slice {(const byte *) (b.data ()), b.size ()});
+    }
+
+    uint32_little inline CRC32C (string_view b) {
+        return CRC32C (byte_slice {(const byte *) (b.data ()), b.size ()});
+    }
 
     hash::digest160 inline SHA1 (string_view b) {
         return SHA1 (byte_slice {(const byte *) (b.data ()), b.size ()});

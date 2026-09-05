@@ -15,51 +15,65 @@
 #include "cryptopp/md5.h"
 #include "cryptopp/sha.h"
 #include "cryptopp/sha3.h"
+#include "cryptopp/crc.h"
 
 #include <crypto/hash/functions.hpp>
 
 namespace crypto::hash::CryptoPP {
     using namespace ::CryptoPP;
+
+    template <class Transform> struct engine;
     
-    template <class Transform, size_t digest_size, size_t block_size>
+    template <class Transform>
+    requires std::derived_from<Transform, HashTransformation> && (Transform::BLOCKSIZE > 0)
+    struct engine<Transform> : Transform {
+        constexpr static size_t DigestSize = Transform::DIGESTSIZE;
+        constexpr static size_t BlockSize = Transform::BLOCKSIZE;
+        using Transform::Transform;
+    };
+
+    template <class Transform>
     requires std::derived_from<Transform, HashTransformation>
-    struct engine : Transform {
-        constexpr static size_t DigestSize = digest_size;
-        constexpr static size_t BlockSize = block_size;
+    struct engine<Transform> : Transform {
+        constexpr static size_t DigestSize = Transform::DIGESTSIZE;
         using Transform::Transform;
     };
     
 }
 
 namespace crypto::hash {
+
+    struct CRC32 : CryptoPP::engine<CryptoPP::CRC32> {};
+
+    struct CRC32C : CryptoPP::engine<CryptoPP::CRC32C> {};
     
 #ifndef USE_BITCOIND_HASH_FUNCTIONS
-    struct SHA1 : CryptoPP::engine<CryptoPP::SHA1, 20, 64> {};
+    struct SHA1 : CryptoPP::engine<CryptoPP::SHA1> {};
 #endif
 
-    struct MD5 : CryptoPP::engine<CryptoPP::Weak::MD5, 16, 64> {};
+    struct MD5 : CryptoPP::engine<CryptoPP::Weak::MD5> {};
 
-    template <> struct RIPEMD<16> : CryptoPP::engine<CryptoPP::RIPEMD128, 16, 64> {};
+    template <> struct RIPEMD<16> : CryptoPP::engine<CryptoPP::RIPEMD128> {};
 
 #ifndef USE_BITCOIND_HASH_FUNCTIONS
-    template <> struct RIPEMD<20> : CryptoPP::engine<CryptoPP::RIPEMD160, 20, 64> {};
+    template <> struct RIPEMD<20> : CryptoPP::engine<CryptoPP::RIPEMD160> {};
 #endif
 
-    template <> struct RIPEMD<32> : CryptoPP::engine<CryptoPP::RIPEMD256, 32, 64> {};
+    template <> struct RIPEMD<32> : CryptoPP::engine<CryptoPP::RIPEMD256> {};
 
-    template <> struct RIPEMD<40> : CryptoPP::engine<CryptoPP::RIPEMD320, 40, 64> {};
+    template <> struct RIPEMD<40> : CryptoPP::engine<CryptoPP::RIPEMD320> {};
 
-    template <> struct SHA2<28> : CryptoPP::engine<CryptoPP::SHA224, 28, 64> {};
+    template <> struct SHA2<28> : CryptoPP::engine<CryptoPP::SHA224> {};
 
 #ifndef USE_BITCOIND_HASH_FUNCTIONS
-    template <> struct SHA2<32> : CryptoPP::engine<CryptoPP::SHA256, 32, 64> {};
+    template <> struct SHA2<32> : CryptoPP::engine<CryptoPP::SHA256> {};
 #endif
 
-    template <> struct SHA2<48> : CryptoPP::engine<CryptoPP::SHA384, 48, 128> {};
+    template <> struct SHA2<48> : CryptoPP::engine<CryptoPP::SHA384> {};
 
-    template <> struct SHA2<64> : CryptoPP::engine<CryptoPP::SHA512, 64, 128> {};
+    template <> struct SHA2<64> : CryptoPP::engine<CryptoPP::SHA512> {};
 
-    template <size_t size> struct SHA3 : CryptoPP::engine<CryptoPP::SHA3_Final<size>, size, 1600 - size * 2> {};
+    template <size_t size> struct SHA3 : CryptoPP::engine<CryptoPP::SHA3_Final<size>> {};
     
 }
 
@@ -128,6 +142,22 @@ namespace crypto {
 
     hash::digest512 inline SHA3_512 (byte_slice b) {
         return hash::calculate<hash::SHA2<64>> (b);
+    }
+
+    uint32_little inline CRC32 (byte_slice b) {
+        hash::CRC32 w {};
+        w.Update (b.data (), b.size ());
+        uint32_little d;
+        w.Final (d.data ());
+        return d;
+    }
+
+    uint32_little inline CRC32C (byte_slice b) {
+        hash::CRC32C w {};
+        w.Update (b.data (), b.size ());
+        uint32_little d;
+        w.Final (d.data ());
+        return d;
     }
 
 }

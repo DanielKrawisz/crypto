@@ -165,4 +165,15 @@ namespace crypto {
         EXPECT_EQ (crypto::Bitcoin_256 (test), expected);
     }
 
+    TEST (Hash, CRC32) {
+        EXPECT_EQ (CRC32 (""), uint32_little {0});
+        EXPECT_EQ (CRC32 ("123456789"), uint32_little {0xCBF43926});
+    }
+
+    TEST (Hash, CRC32C) {
+        EXPECT_EQ (CRC32C ("123456789"), uint32_little {0xe3069283});
+        EXPECT_EQ (CRC32C (""), 0);
+        EXPECT_EQ (CRC32C ("The quick brown fox jumps over the lazy dog"), 0x22620404);
+    }
+
 }

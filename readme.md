@@ -6,7 +6,7 @@ The library provides cryptographic hash functions, message authentication codes,
 
 ## Features
 
-* Cryptographic hash functions
+* [Cryptographic hash functions](#hash-functions)
 
   * MD5
   * SHA-1
@@ -14,17 +14,18 @@ The library provides cryptographic hash functions, message authentication codes,
   * SHA-3
   * RIPEMD
   * Bitcoin
-* Message authentication codes
+* [Message authentication codes](#message-authentication-codes)
 
   * HMAC
-* Block ciphers
-* Stream ciphers
-* Deterministic random bit generators
+* [Encryption](#encryption)
+  * Block ciphers
+  * Stream ciphers
+* [Deterministic random bit generators](#random-number-generators)
 
   * HMAC_DRBG
   * Hash_DRBG
   * CTR_DRBG
-* Shamir's Secret Sharing
+* [Shamir's Secret Sharing](#shamirs-secret-sharing)
 
 The library is designed to integrate with the Data library and its existing data types and interfaces.
 
@@ -125,6 +126,7 @@ The following hash functions are available:
 
 | Family  | Functions                                                                      |
 | ------- | ------------------------------------------------------------------------------ |
+| CRC     | `CRC32`, `CRC32C`                                                              |
 | MD5     | `MD5`                                                                          |
 | SHA-1   | `SHA1`                                                                         |
 | SHA-2   | `SHA2_224`, `SHA2_256`, `SHA2_384`, `SHA2_512`, `SHA2_512_224`, `SHA2_512_256` |
