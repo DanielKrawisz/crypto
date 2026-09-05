@@ -83,7 +83,7 @@ namespace crypto::MAC {
         // If key_size > block_size
         // hash the key
         // copy digest into K0
-        if (key_size > BlockSize) {
+        if constexpr (key_size > BlockSize) {
             engine g {};
             g.Update (key.data (), key_size);
             g.Final (K);

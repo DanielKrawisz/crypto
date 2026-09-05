@@ -20,7 +20,7 @@ add_executable (
     key_derivation.cpp
 
     # symmetric crypto
-    symmetric_crypto.cpp
+    key_derivation.cpp
     NIST_DRBG.cpp
     secret_share.cpp
 

@@ -14,12 +14,17 @@ The library provides cryptographic hash functions, message authentication codes,
   * SHA-3
   * RIPEMD
   * Bitcoin
+* [Encryption](#encryption)
+
+  * Block ciphers
+  * Stream ciphers
 * [Message authentication codes](#message-authentication-codes)
 
   * HMAC
-* [Encryption](#encryption)
-  * Block ciphers
-  * Stream ciphers
+* [Key derivation](#key-derivation-functions)
+
+  * PKCS5_PBKDF2_HMAC
+  * HKDF
 * [Deterministic random bit generators](#random-number-generators)
 
   * HMAC_DRBG
@@ -477,6 +482,72 @@ All MAC constructions follow the same general interface:
 * Keys are represented by `crypto::symmetric_key<N>`.
 
 HMAC is currently the only supported MAC construction. Future MAC algorithms use the same interface, allowing code that operates on MACs to remain independent of the particular MAC construction being used.
+
+## Key Derivation Functions
+
+### PKCS5_PBKDF2_HMAC
+
+Crypto provides `PKCS5_PBKDF2_HMAC` for deriving a symmetric key from a password using PBKDF2 with HMAC.
+
+The function is parameterized by the desired key size and the hash function:
+
+```cpp
+crypto::PKCS5_PBKDF2_HMAC<size, hash_function>
+```
+
+There are two overloads. The first specifies the number of PBKDF2 iterations explicitly:
+
+```cpp
+crypto::symmetric_key<size> PKCS5_PBKDF2_HMAC<size, hash_function> (
+    const std::string& password,
+    int iterations,
+    const bytes salt = {}
+);
+```
+
+The second overload specifies the desired amount of computation time instead of an explicit iteration count:
+
+```cpp
+crypto::symmetric_key<size> PKCS5_PBKDF2_HMAC<size, hash_function> (
+    const std::string& password,
+    std::chrono::duration<float> seconds,
+    const bytes salt = {}
+);
+```
+
+Both overloads return a `crypto::symmetric_key<size>`. The salt is optional and defaults to an empty byte
+sequence but ordinarily you would want a unique and unpredictible salt.
+
+### HKDF
+
+HKDF is a key derivation function based on HMAC. It is intended for deriving cryptographic keys and other pseudorandom values from existing secret key material.
+
+HKDF consists of two separate operations.
+
+Extract converts input keying material into a fixed-size pseudorandom key (PRK). The PRK size is equal to the digest size of the underlying hash:
+
+PRK = HMAC(salt, IKM)
+
+A salt may be supplied explicitly, or omitted. When no salt is supplied, HKDF uses a salt consisting of DigestSize zero bytes.
+
+Expand uses the PRK to generate the requested amount of output, optionally incorporating application-specific context through info:
+
+T(1) = HMAC(PRK, T(0) || info || 0x01)
+T(2) = HMAC(PRK, T(1) || info || 0x02)
+...
+
+The output length is selected when the HKDF operation is created. HKDF can produce a variable number of bytes, but unlike an XOF it has a maximum output size of 255 * DigestSize.
+
+HKDF can be used as a reader, making it convenient to derive several values from one expansion:
+
+HKDF<SHA256> hkdf {ikm, info, 64};
+
+hkdf >> key1;
+hkdf >> key2;
+
+The two keys consume consecutive portions of the derived output.
+
+HKDF is a key derivation function, not a source of entropy. Its input keying material must already contain sufficient entropy for the security level required by the application.
 
 ## Random Number Generators
 
