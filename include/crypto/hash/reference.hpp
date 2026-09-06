@@ -52,18 +52,6 @@ namespace crypto {
     hash::digest256 SHA2_512_256 (byte_slice);
     hash::digest256 SHA2_512_256 (string_view);
 
-    template <size_t size> hash::digest<size> SHA3 (byte_slice);
-    template <size_t size> hash::digest<size> SHA3 (string_view);
-
-    hash::digest224 SHA3_224 (byte_slice);
-    hash::digest224 SHA3_224 (string_view);
-    hash::digest256 SHA3_256 (byte_slice);
-    hash::digest256 SHA3_256 (string_view);
-    hash::digest384 SHA3_384 (byte_slice);
-    hash::digest384 SHA3_384 (string_view);
-    hash::digest512 SHA3_512 (byte_slice);
-    hash::digest512 SHA3_512 (string_view);
-
     hash::digest128 RIPEMD_128 (byte_slice);
     hash::digest128 RIPEMD_128 (string_view);
     hash::digest160 RIPEMD_160 (byte_slice);
@@ -77,6 +65,36 @@ namespace crypto {
     hash::digest256 Bitcoin_256 (byte_slice);
     hash::digest160 Bitcoin_160 (string_view);
     hash::digest256 Bitcoin_256 (string_view);
+
+    template <size_t size> hash::digest<size> SHA3 (byte_slice);
+    template <size_t size> hash::digest<size> SHA3 (string_view);
+
+    hash::digest224 SHA3_224 (byte_slice);
+    hash::digest224 SHA3_224 (string_view);
+    hash::digest256 SHA3_256 (byte_slice);
+    hash::digest256 SHA3_256 (string_view);
+    hash::digest384 SHA3_384 (byte_slice);
+    hash::digest384 SHA3_384 (string_view);
+    hash::digest512 SHA3_512 (byte_slice);
+    hash::digest512 SHA3_512 (string_view);
+
+    template <size_t size> requires (size <= 32 && size > 0)
+    hash::digest<size> BLAKE2s (byte_slice);
+
+    template <size_t size> requires (size <= 32 && size > 0)
+    hash::digest<size> BLAKE2s (string_view);
+
+    template <size_t size> requires (size <= 64 && size > 0)
+    hash::digest<size> BLAKE2b (byte_slice);
+
+    template <size_t size> requires (size <= 64 && size > 0)
+    hash::digest<size> BLAKE2b (string_view);
+
+    template <size_t size> requires (size > 0)
+    hash::digest<size> BLAKE3 (byte_slice);
+
+    template <size_t size> requires (size > 0)
+    hash::digest<size> BLAKE3 (string_view);
 
 }
 
@@ -105,6 +123,11 @@ namespace crypto::hash {
     template <> struct RIPEMD<32>;
     template <> struct RIPEMD<40>;
 
+    using RIPEMD_128 = RIPEMD<16>;
+    using RIPEMD_160 = RIPEMD<20>;
+    using RIPEMD_256 = RIPEMD<32>;
+    using RIPEMD_320 = RIPEMD<40>;
+
     template <> struct SHA2<28>;
     template <> struct SHA2<32>;
     template <> struct SHA2<48>;
@@ -118,6 +141,20 @@ namespace crypto::hash {
     using SHA2_512 = SHA2<64>;
     using SHA2_512_224 = SHA2<64, 28>;
     using SHA2_512_256 = SHA2<64, 32>;
+
+    using SHA3_224 = SHA3<28>;
+    using SHA3_256 = SHA3<32>;
+    using SHA3_384 = SHA3<48>;
+    using SHA3_512 = SHA3<64>;
+/*
+    template <size_t size> requires (size <= 32 && size > 0)
+    struct BLAKE2s;
+
+    template <size_t size> requires (size <= 64 && size > 0)
+    struct BLAKE2b;
+
+    template <size_t size> requires (size > 0)
+    struct BLAKE3;*/
 
 }
 
@@ -209,6 +246,21 @@ namespace crypto {
     hash::digest256 inline Bitcoin_256 (string_view b) {
         return Bitcoin_256 (byte_slice {(const byte *) (b.data ()), b.size ()});
     }
+/*
+    template <size_t size> requires (size <= 32 && size > 0)
+    hash::digest<size> inline BLAKE2s (string_view x) {
+        return BLAKE2s<size> (byte_slice {(const byte *) (x.data ()), x.size ()});
+    }
+
+    template <size_t size> requires (size <= 64 && size > 0)
+    hash::digest<size> inline BLAKE2b (string_view x) {
+        return BLAKE2b<size> (byte_slice {(const byte *) (x.data ()), x.size ()});
+    }
+
+    template <size_t size> requires (size > 0)
+    hash::digest<size> inline BLAKE3 (string_view x) {
+        return BLAKE3<size> (byte_slice {(const byte *) (x.data ()), x.size ()});
+    }*/
 
 }
 

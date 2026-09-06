@@ -15,6 +15,7 @@ add_executable (
 
     # hash
     hash.cpp
+    internal.cpp
 
     # key derivation
     key_derivation.cpp

@@ -16,6 +16,7 @@
 #include "cryptopp/sha.h"
 #include "cryptopp/sha3.h"
 #include "cryptopp/crc.h"
+//#include <cryptopp/blake2.h>
 
 #include <crypto/hash/cryptopp/engine.hpp>
 
