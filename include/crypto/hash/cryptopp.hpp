@@ -15,6 +15,7 @@
 #include "cryptopp/md5.h"
 #include "cryptopp/sha.h"
 #include "cryptopp/sha3.h"
+#include "cryptopp/crc.h"
 
 #include <crypto/hash/cryptopp/engine.hpp>
 
@@ -117,6 +118,34 @@ namespace crypto {
         return hash::calculate<hash::SHA2<64>> (b);
     }
 
+}
+
+namespace data::hash {
+
+    // All of these satisfy hash::Engine.
+
+    struct CRC32 : crypto::hash::CryptoPP::engine<CryptoPP::CRC32> {};
+
+    struct CRC32C : crypto::hash::CryptoPP::engine<CryptoPP::CRC32C> {};
+}
+
+namespace data {
+
+    uint32_little inline CRC32 (byte_slice b) {
+        hash::CRC32 w {};
+        w.Update (b.data (), b.size ());
+        uint32_little d;
+        w.Final (d.data ());
+        return d;
+    }
+
+    uint32_little inline CRC32C (byte_slice b) {
+        hash::CRC32C w {};
+        w.Update (b.data (), b.size ());
+        uint32_little d;
+        w.Final (d.data ());
+        return d;
+    }
 }
 
 #endif

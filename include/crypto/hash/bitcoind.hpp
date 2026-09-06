@@ -11,7 +11,7 @@
 #include <sv/crypto/ripemd160.h>
 #include <sv/crypto/sha256.h>
 
-#include <crypto/hash/functions.hpp>
+#include <crypto/hash/reference.hpp>
 
 namespace crypto::hash {
     

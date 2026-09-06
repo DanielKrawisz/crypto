@@ -5,9 +5,7 @@
 #ifndef DATA_CRYPTO_HASH
 #define DATA_CRYPTO_HASH
 
-#include <crypto/hash/functions.hpp>
-
-#include <crypto/hash/general.hpp>
+#include <crypto/hash/reference.hpp>
 
 #define USE_BITCOIND_HASH_FUNCTIONS
 

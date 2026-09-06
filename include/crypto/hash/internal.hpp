@@ -10,18 +10,11 @@
 
 #include <crypto/one_way.hpp>
 
-#include <crypto/hash/cryptopp/engine.hpp>
-
-#include "cryptopp/crc.h"
+// Here we collect hash functions that are intended to
+// work internally rather than in public.
 
 // general purpose hash functions (non-cryptographic)
 namespace data {
-
-    uint32_little CRC32 (byte_slice);
-    uint32_little CRC32 (string_view);
-
-    uint32_little CRC32C (byte_slice);
-    uint32_little CRC32C (string_view);
 
     // the following are not yet supported.
     uint32_little xxHash_32 (byte_slice, uint32_little seed);
@@ -49,40 +42,20 @@ namespace data {
     uint128_little MurmurHash3_x64_128 (string_view, uint32 seed);
 }
 
-namespace data::hash {
+// password hashing functions.
+namespace crypto {
 
-    // All of these satisfy hash::Engine.
+    template <size_t output_size>
+    byte_array<output_size> Argon2id (
+        uint32 time_cost,
+        uint32 mem_cost,
+        uint32 parallelism,
+        byte_slice password,
+        byte_slice salt);
 
-    struct CRC32 : crypto::hash::CryptoPP::engine<CryptoPP::CRC32> {};
+    template <size_t output_size>
+    byte_array<output_size> scrypt (byte_slice password, byte_slice salt, uint64 ops_limit, size_t mem_limit);
 
-    struct CRC32C : crypto::hash::CryptoPP::engine<CryptoPP::CRC32C> {};
-}
-
-namespace data {
-
-    uint32_little inline CRC32 (string_view b) {
-        return CRC32 (byte_slice {(const byte *) (b.data ()), b.size ()});
-    }
-
-    uint32_little inline CRC32C (string_view b) {
-        return CRC32C (byte_slice {(const byte *) (b.data ()), b.size ()});
-    }
-
-    uint32_little inline CRC32 (byte_slice b) {
-        hash::CRC32 w {};
-        w.Update (b.data (), b.size ());
-        uint32_little d;
-        w.Final (d.data ());
-        return d;
-    }
-
-    uint32_little inline CRC32C (byte_slice b) {
-        hash::CRC32C w {};
-        w.Update (b.data (), b.size ());
-        uint32_little d;
-        w.Final (d.data ());
-        return d;
-    }
 }
 
 #endif

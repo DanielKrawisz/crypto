@@ -9,6 +9,20 @@
 
 #include <crypto/one_way.hpp>
 
+// this file collects hash function declarations that can be used as references,
+// secure or otherwise. In other words, the digest of the function can be used
+// to denote a string in public for other people to know what you mean.
+
+// general purpose hash functions (non-cryptographic)
+namespace data {
+
+    uint32_little CRC32 (byte_slice);
+    uint32_little CRC32 (string_view);
+
+    uint32_little CRC32C (byte_slice);
+    uint32_little CRC32C (string_view);
+}
+
 namespace crypto::hash {
     using namespace data::hash;
 }
@@ -66,6 +80,11 @@ namespace crypto {
 
 }
 
+namespace data::hash {
+    struct CRC32;
+    struct CRC32C;
+}
+
 namespace crypto::hash {
 
     template <typename W>
@@ -100,6 +119,17 @@ namespace crypto::hash {
     using SHA2_512_224 = SHA2<64, 28>;
     using SHA2_512_256 = SHA2<64, 32>;
 
+}
+
+namespace data {
+
+    uint32_little inline CRC32 (string_view b) {
+        return CRC32 (byte_slice {(const byte *) (b.data ()), b.size ()});
+    }
+
+    uint32_little inline CRC32C (string_view b) {
+        return CRC32C (byte_slice {(const byte *) (b.data ()), b.size ()});
+    }
 }
 
 namespace crypto {

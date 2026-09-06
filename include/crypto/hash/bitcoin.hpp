@@ -5,7 +5,7 @@
 #ifndef CRYPTO_HASH_BITCOIN
 #define CRYPTO_HASH_BITCOIN
 
-#include <crypto/hash/functions.hpp>
+#include <crypto/hash/reference.hpp>
 
 namespace crypto::hash {
     

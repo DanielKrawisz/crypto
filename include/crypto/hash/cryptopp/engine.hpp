@@ -6,7 +6,7 @@
 #define CRYPTO_HASH_CRYPTOPP_ENGINE
 
 #include "cryptopp/cryptlib.h"
-#include <crypto/hash/functions.hpp>
+#include <crypto/hash/reference.hpp>
 
 namespace crypto::hash::CryptoPP {
     using namespace ::CryptoPP;
