@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Daniel Krawisz
+// Copyright (c) 2021-2026 Daniel Krawisz
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -15,37 +15,10 @@
 #include "cryptopp/md5.h"
 #include "cryptopp/sha.h"
 #include "cryptopp/sha3.h"
-#include "cryptopp/crc.h"
 
-#include <crypto/hash/functions.hpp>
-
-namespace crypto::hash::CryptoPP {
-    using namespace ::CryptoPP;
-
-    template <class Transform> struct engine;
-    
-    template <class Transform>
-    requires std::derived_from<Transform, HashTransformation> && (Transform::BLOCKSIZE > 0)
-    struct engine<Transform> : Transform {
-        constexpr static size_t DigestSize = Transform::DIGESTSIZE;
-        constexpr static size_t BlockSize = Transform::BLOCKSIZE;
-        using Transform::Transform;
-    };
-
-    template <class Transform>
-    requires std::derived_from<Transform, HashTransformation>
-    struct engine<Transform> : Transform {
-        constexpr static size_t DigestSize = Transform::DIGESTSIZE;
-        using Transform::Transform;
-    };
-    
-}
+#include <crypto/hash/cryptopp/engine.hpp>
 
 namespace crypto::hash {
-
-    struct CRC32 : CryptoPP::engine<CryptoPP::CRC32> {};
-
-    struct CRC32C : CryptoPP::engine<CryptoPP::CRC32C> {};
     
 #ifndef USE_BITCOIND_HASH_FUNCTIONS
     struct SHA1 : CryptoPP::engine<CryptoPP::SHA1> {};
@@ -142,22 +115,6 @@ namespace crypto {
 
     hash::digest512 inline SHA3_512 (byte_slice b) {
         return hash::calculate<hash::SHA2<64>> (b);
-    }
-
-    uint32_little inline CRC32 (byte_slice b) {
-        hash::CRC32 w {};
-        w.Update (b.data (), b.size ());
-        uint32_little d;
-        w.Final (d.data ());
-        return d;
-    }
-
-    uint32_little inline CRC32C (byte_slice b) {
-        hash::CRC32C w {};
-        w.Update (b.data (), b.size ());
-        uint32_little d;
-        w.Final (d.data ());
-        return d;
     }
 
 }

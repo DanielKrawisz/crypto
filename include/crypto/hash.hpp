@@ -7,6 +7,8 @@
 
 #include <crypto/hash/functions.hpp>
 
+#include <crypto/hash/general.hpp>
+
 #define USE_BITCOIND_HASH_FUNCTIONS
 
 #ifdef USE_BITCOIND_HASH_FUNCTIONS

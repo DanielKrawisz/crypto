@@ -12,7 +12,6 @@
 
 namespace crypto {
 
-    // TODO include MD5
     struct SHA_test_case {
         string Test;
         string ExpectedSHA1;

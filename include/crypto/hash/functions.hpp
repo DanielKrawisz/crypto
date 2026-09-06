@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Daniel Krawisz
+// Copyright (c) 2022-26 Daniel Krawisz
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -15,22 +15,16 @@ namespace crypto::hash {
 
 namespace crypto {
 
-    // supported hash functions.
+    // supported cryptographic hash functions.
 
-    // not cryptographically secure, but fast and standard.
-    uint32_little CRC32 (byte_slice);
-    uint32_little CRC32 (string_view);
-
-    uint32_little CRC32C (byte_slice);
-    uint32_little CRC32C (string_view);
-
-    // SHA1 and MD5 are depricated but still standard when security is not a big concern.
+    // SHA1 and MD5 are depricated but still standard and still useful for some things.
     hash::digest160 SHA1 (byte_slice);
     hash::digest160 SHA1 (string_view);
 
     hash::digest128 MD5 (byte_slice);
     hash::digest128 MD5 (string_view);
 
+    // secure hash functions for digital signatures.
     hash::digest224 SHA2_224 (byte_slice);
     hash::digest224 SHA2_224 (string_view);
     hash::digest256 SHA2_256 (byte_slice);
@@ -109,14 +103,6 @@ namespace crypto::hash {
 }
 
 namespace crypto {
-
-    uint32_little inline CRC32 (string_view b) {
-        return CRC32 (byte_slice {(const byte *) (b.data ()), b.size ()});
-    }
-
-    uint32_little inline CRC32C (string_view b) {
-        return CRC32C (byte_slice {(const byte *) (b.data ()), b.size ()});
-    }
 
     hash::digest160 inline SHA1 (string_view b) {
         return SHA1 (byte_slice {(const byte *) (b.data ()), b.size ()});
