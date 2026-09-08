@@ -14,6 +14,10 @@ The library provides cryptographic hash functions, message authentication codes,
   * SHA-3
   * RIPEMD
   * Bitcoin
+
+* [Password hashing](#password-hashing)
+
+  * scrypt
 * [Encryption](#encryption)
 
   * Block ciphers
@@ -218,6 +222,20 @@ data::writer<byte> &write_SHA2_256 (data::writer<byte> &writer, const data::byte
     return writer << crypto::SHA2_256 (data);
 }
 ```
+## Password Hashing
+
+The library also provides **scrypt**, a password-hashing and password-based key derivation function.
+
+A typical cryptographic hash function, such as SHA-256 or BLAKE2, is designed to calculate a digest quickly. This is desirable for most cryptographic applications, but it is undesirable for storing passwords: an attacker who obtains a password database can test enormous numbers of password guesses very quickly.
+
+Password-hashing functions such as scrypt are deliberately designed to make each password guess expensive. Scrypt requires significant CPU time and memory, making large-scale password guessing substantially more difficult. The salt ensures that the same password produces different derived values when different salts are used.
+
+Consequently, **cryptographic hashes and password hashes serve different purposes**:
+
+* **Cryptographic hashes** such as SHA-256, SHA-512, and BLAKE2 are fast general-purpose primitives used for hashing messages, checksums, signatures, integrity mechanisms, and other cryptographic constructions.
+* **Password-hashing functions** such as scrypt are deliberately expensive and are intended for passwords and other low-entropy secrets.
+
+A password should therefore generally **not be hashed with SHA-256, SHA-512, or BLAKE2 directly**. Use a password-hashing function such as scrypt instead.
 
 ## Encryption
 

@@ -175,4 +175,14 @@ namespace crypto {
         EXPECT_EQ (CRC32C ("The quick brown fox jumps over the lazy dog"), 0x22620404);
     }
 
+    TEST (Hash, SHA2_512_224) {
+        EXPECT_EQ (SHA2_512_224 (""), hash::digest224 {"6ed0dd02806fa89e25de060c19d3ac86cabb87d6a0ddd05c333b84f4"});
+        EXPECT_EQ (SHA2_512_224 ("abc"), hash::digest224 {"4634270f707b6a54daae7530460842e20e37ed265ceee9a43e8924aa"});
+    }
+
+    TEST (Hash, SHA2_512_256) {
+        EXPECT_EQ (SHA2_512_256 (""), hash::digest256 {"c672b8d1ef56ed28ab87c3622c5114069bdd3ad7b8f9737498d0c01ecef0967a"});
+        EXPECT_EQ (SHA2_512_256 ("abc"), hash::digest256 {"53048e2681941ef99b2e29b76b4c7dabe4c2d0c634fc6d46e0e2f13107e7af23"});
+    }
+
 }

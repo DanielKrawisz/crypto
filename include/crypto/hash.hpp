@@ -15,6 +15,7 @@
 #endif
 
 #include <crypto/hash/cryptopp.hpp>
+#include <crypto/hash/openssl.hpp>
 
 // Bitcoin hash functions
 #include <crypto/hash/bitcoin.hpp>
