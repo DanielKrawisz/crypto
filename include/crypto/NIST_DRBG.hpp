@@ -12,7 +12,8 @@
 #include <data/tools/lazy_writer.hpp>
 #include <data/random.hpp>
 
-#include <crypto/hash.hpp>
+#include <crypto/hash/SHA1.hpp>
+#include <crypto/hash/SHA2.hpp>
 #include <crypto/MAC.hpp>
 #include <crypto/MAC/HMAC.hpp>
 #include <crypto/block/cipher.hpp>

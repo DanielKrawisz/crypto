@@ -6,36 +6,94 @@ The library provides cryptographic hash functions, message authentication codes,
 
 ## Features
 
-* [Cryptographic hash functions](#hash-functions)
-
-  * MD5
-  * SHA-1
-  * SHA-2
-  * SHA-3
-  * RIPEMD
-  * Bitcoin
-
-* [Password hashing](#password-hashing)
-
-  * scrypt
-* [Encryption](#encryption)
-
-  * Block ciphers
-  * Stream ciphers
-* [Message authentication codes](#message-authentication-codes)
-
-  * HMAC
-  * CMAC
-* [Key derivation](#key-derivation-functions)
-
-  * PKCS5_PBKDF2_HMAC
-  * HKDF
-* [Deterministic random bit generators](#random-number-generators)
-
-  * HMAC_DRBG
-  * Hash_DRBG
-  * CTR_DRBG
-* [Shamir's Secret Sharing](#shamirs-secret-sharing)
+<table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td colspan="2">&#183; <a href="#hash-functions">Cryptographic hash functions</a></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; MD5</td>
+        <td><code>crypto/hash/MD5.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; SHA1</td>
+        <td><code>crypto/hash/SHA1.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; SHA2</td>
+        <td><code>crypto/hash/SHA2.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; RIPEMD</td>
+        <td><code>crypto/hash/RIPEMD.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; Bitcoin</td>
+        <td><code>crypto/hash/Bitcoin.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; SHA3</td>
+        <td><code>crypto/hash/SHA3.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&#183; <a href="#password-hashing">Password hashing</a></td>
+        <td><code>crypto/hash/internal.hpp</code></td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&#183; scrypt</td>
+    </tr>
+    <tr>
+        <td colspan="2">&#183; <a href="#encryption">Encryption</a></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#stream-ciphers">Stream ciphers</a></td>
+        <td><code>crypto/stream/cipher.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#block-ciphers">Block ciphers</a></td>
+        <td><code>crypto/block.hpp</code></td>
+    </tr>
+    <tr>
+        <td colspan="2">&#183; <a href="#message-authentication-codes">Message authentication codes</a></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#hmac">HMAC</a></td>
+        <td><code>crypto/MAC/HMAC.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#cmac">CMAC</a></td>
+        <td><code>crypto/MAC/CMAC.hpp</code></td>
+    </tr>
+    <tr>
+        <td colspan="2">&#183; <a href="#key-derivation-functions">Key derivation functions</a></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#pkcs5-pbkdf2-hmac">PKCS5_PBKDF2_HMAC</a></td>
+        <td><code>crypto/PKCS5_PBKDF2_HMAC.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#hkdf">HKDF</a></td>
+        <td><code>crypto/HKDF.hpp</code></td>
+    </tr>
+    <tr>
+        <td colspan="2">&#183; <a href="#deterministic-random-bit-generators">Deterministic random bit generators</a></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#hmac-drbg">HMAC_DRBG</a></td>
+        <td><code>crypto/NIST/HMAC_DRBG.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#hash-drbg">Hash_DRBG</a></td>
+        <td><code>crypto/NIST/Hash_DRBG.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; <a href="#ctr-drbg">CTR_DRBG</a></td>
+        <td><code>crypto/NIST/CTR_DRBG.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&#183; <a href="#shamirs-secret-sharing">Shamir's Secret Sharing</a></td>
+        <td><code>crypto/secret_share.hpp</code></td>
+    </tr>
+</table>
 
 The library is designed to integrate with the Data library and its existing data types and interfaces.
 
@@ -241,21 +299,13 @@ A password should therefore generally **not be hashed with SHA-256, SHA-512, or 
 
 Crypto provides encryption and decryption functions for both stream ciphers and block ciphers.
 
-The basic interface is:
-
 ```cpp
-crypto::encrypt(cipher, key, data)
-crypto::decrypt(cipher, key, data)
+data::bytes encrypted = crypto::encrypt (cipher, key, plaintext);
+data::bytes plaintext = crypto::decrypt (cipher, key, encrypted);
 ```
-
 Both functions take a cipher, a `crypto::symmetric_key<N>`, and `data::bytes`, and return `data::bytes`.
 
-```cpp
-data::bytes encrypted = crypto::encrypt(cipher, key, data);
-data::bytes decrypted = crypto::decrypt(cipher, key, encrypted);
-```
-
-The cipher is a type or object describing the particular encryption algorithm and its parameters.
+The cipher configuration determines the algorithm, mode, padding, and any other parameters needed to perform the operation.
 
 ### Stream Ciphers
 
@@ -323,7 +373,7 @@ data::bytes decrypted = crypto::decrypt(cipher, key, encrypted);
 
 The exact AES algorithm type depends on the AES candidate being selected.
 
-### CTR Mode
+#### CTR Mode
 
 CTR mode additionally requires a byte-order parameter. It is specified as an additional template argument to `block_cipher`:
 
@@ -345,7 +395,7 @@ crypto::block_cipher<
 >
 ```
 
-### Padding
+#### Padding
 
 A `block_cipher` is constructed with a padding scheme. The available padding schemes are:
 
@@ -364,21 +414,6 @@ Padding is applied when the data does not otherwise satisfy the block-size requi
 `NO_PADDING` disables padding. It can only be used with block cipher modes that can operate as a virtual stream cipher, where the input does not need to be an exact multiple of the block size.
 
 For example, modes such as CTR, CFB, and OFB can process data without requiring padding, while modes that require complete blocks cannot be used with `NO_PADDING` unless their configuration otherwise permits this behavior.
-
-### Encryption and Decryption
-
-Encryption and decryption use the same cipher configuration and symmetric key:
-
-```cpp
-data::bytes encrypted = crypto::encrypt(cipher, key, plaintext);
-data::bytes plaintext = crypto::decrypt(cipher, key, encrypted);
-```
-
-The return value of both operations is `data::bytes`.
-
-The cipher configuration determines the algorithm, mode, padding, and any other parameters needed to perform the operation. The key is always supplied separately as a `crypto::symmetric_key<N>`.
-
-
 
 ## Message Authentication Codes
 

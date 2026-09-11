@@ -14,7 +14,11 @@ add_executable (
     write.cpp
 
     # hash
-    hash.cpp
+    CRC.cpp
+    MD5.cpp
+    SHA.cpp
+    RIPEMD.cpp
+    Bitcoin.cpp
     internal.cpp
 
     # key derivation

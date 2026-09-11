@@ -11,7 +11,7 @@
 
 #include <crypto/hash.hpp>
 #include <crypto/cipher.hpp>
-#include <crypto/hash/cryptopp/tf_from_engine.hpp>
+#include <crypto/hash/dep/tf_from_engine.hpp>
 
 namespace crypto {
     template <size_t size, hash::Engine Hash>

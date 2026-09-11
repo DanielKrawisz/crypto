@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Katrina Swales
+// Copyright (c) 2023 Katrina Swales, 2026 Daniel Krawisz
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,9 @@
 #include <data/list.hpp>
 #include <data/encoding/endian.hpp>
 
-#include <crypto/hash.hpp>
+#include <crypto/hash/SHA1.hpp>
+#include <crypto/hash/SHA2.hpp>
+#include <crypto/hash/SHA3.hpp>
 
 namespace crypto {
 
@@ -96,83 +98,6 @@ namespace crypto {
             SHA_test_case::run<crypto::hash::SHA3<64>> (test_case.Test, test_case.ExpectedSHA3_512);
         }
 
-    }
-
-    void RIPEMD_test_case (std::string test, string dig) {
-        EXPECT_EQ (crypto::RIPEMD_160 (test), hash::digest<20> {dig});
-        EXPECT_EQ (hash::calculate<crypto::hash::RIPEMD<20>> (test), hash::digest<20> {dig});
-        EXPECT_EQ (hash::calculate<hash::writer<crypto::hash::RIPEMD<20>>> (test), hash::digest<20> {dig});
-
-        hash::digest<20> result; {
-            hash::writer<crypto::hash::RIPEMD<20>> w {result};
-            w << test;
-        }
-
-        EXPECT_EQ (result, hash::digest<20> {dig});
-    }
-
-    // from https://rosettacode.org/wiki/RIPEMD-160
-    TEST (Hash, RIPEMD) {
-
-        RIPEMD_test_case ("", "9c1185a5c5e9fc54612808977ee8f548b2258d31");
-        RIPEMD_test_case ("a", "0bdc9d2d256b3ee9daae347be6f4dc835a467ffe");
-        RIPEMD_test_case ("abc", "8eb208f7e05d987a9b044a8e98c6b087f15a0bfc");
-        RIPEMD_test_case ("message digest", "5d0689ef49d2fae572b881b123a85ffa21595f36");
-        RIPEMD_test_case ("abcdefghijklmnopqrstuvwxyz",
-            "f71c27109c692c1b56bbdceb5b9d2865b3708dbc");
-        RIPEMD_test_case ("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
-            "12a053384a9c0c88e405a06c27dcf49ada62eb2b");
-
-    }
-
-    void MD5_test_case (std::string test, string expected) {
-
-        EXPECT_EQ (crypto::MD5 (test), hash::digest<16> {expected});
-        EXPECT_EQ (hash::calculate<crypto::hash::MD5> (test), hash::digest<16> {expected});
-        EXPECT_EQ (hash::calculate<hash::writer<crypto::hash::MD5>> (test), hash::digest<16> {expected});
-
-        hash::digest<16> result = build_with<hash::digest<16>, hash::writer<crypto::hash::MD5>> ([&test] (auto &w) {
-            w << test;
-        });
-
-        EXPECT_EQ (result, hash::digest<16> {expected});
-
-    }
-
-    TEST (Hash, MD5) {
-
-        MD5_test_case ("", "d41d8cd98f00b204e9800998ecf8427e");
-        MD5_test_case ("a", "0cc175b9c0f1b6a831c399e269772661");
-        MD5_test_case ("abc", "900150983cd24fb0d6963f7d28e17f72");
-        MD5_test_case ("message digest", "f96b697d7cb7938d525a2f31aaf161d0");
-
-        MD5_test_case ("abcdefghijklmnopqrstuvwxyz",
-            "c3fcd3d76192e4007dfb496cca67e13b");
-
-        MD5_test_case ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-            "d174ab98d277d9f5a5611c2c9f419d9f");
-
-        MD5_test_case ("12345678901234567890123456789012345678901234567890123456789012345678901234567890",
-            "57edf4a22be3c955ac49da2e2107b67a");
-
-    }
-
-    TEST (Hash, BitcoinHash) {
-        bytes test = *encoding::hex::read ("00010203fdfeff");
-        hash::digest256 expected {"be586c8b20dee549bdd66018c7a79e2b67bb88b7c7d428fa4c970976d2bec5ba"};
-
-        EXPECT_EQ (crypto::Bitcoin_256 (test), expected);
-    }
-
-    TEST (Hash, CRC32) {
-        EXPECT_EQ (CRC32 (""), uint32_little {0});
-        EXPECT_EQ (CRC32 ("123456789"), uint32_little {0xCBF43926});
-    }
-
-    TEST (Hash, CRC32C) {
-        EXPECT_EQ (CRC32C ("123456789"), uint32_little {0xe3069283});
-        EXPECT_EQ (CRC32C (""), 0);
-        EXPECT_EQ (CRC32C ("The quick brown fox jumps over the lazy dog"), 0x22620404);
     }
 
     TEST (Hash, SHA2_512_224) {

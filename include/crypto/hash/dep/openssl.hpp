@@ -5,7 +5,7 @@
 #ifndef CRYPTO_HASH_OPENSSL
 #define CRYPTO_HASH_OPENSSL
 
-#include <crypto/hash/reference.hpp>
+#include <crypto/hash.hpp>
 #include <openssl/evp.h>
 
 namespace crypto::hash::OpenSSL {
@@ -57,39 +57,6 @@ namespace crypto::hash::OpenSSL {
         }
     };
 
-}
-
-namespace crypto::hash {
-
-    template <> struct SHA2<64, 28> : OpenSSL::engine<28> {
-
-        static int init (EVP_MD_CTX *ctx) {
-            return EVP_DigestInit_ex (ctx, EVP_sha512_224 (), nullptr);
-        }
-
-        SHA2 (): OpenSSL::engine<28> {init} {}
-    };
-
-    template <> struct SHA2<64, 32> : OpenSSL::engine<32> {
-
-        static int init (EVP_MD_CTX *ctx) {
-            return EVP_DigestInit_ex (ctx, EVP_sha512_256 (), nullptr);
-        }
-
-        SHA2 (): OpenSSL::engine<32> {init} {}
-    };
-
-}
-
-namespace crypto {
-
-    hash::digest224 inline SHA2_512_224 (byte_slice x) {
-        return hash::calculate<hash::SHA2<64, 28>> (x);
-    }
-
-    hash::digest256 inline SHA2_512_256 (byte_slice x) {
-        return hash::calculate<hash::SHA2<64, 32>> (x);
-    }
 }
 
 #endif

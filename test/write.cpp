@@ -8,7 +8,7 @@
 #include <data/array.hpp>
 #include <data/numbers.hpp>
 
-#include <crypto/hash.hpp>
+#include <crypto/hash/MD5.hpp>
 #include <crypto/MAC.hpp>
 #include <crypto/MAC/HMAC.hpp>
 

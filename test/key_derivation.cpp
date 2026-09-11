@@ -8,7 +8,8 @@
 #include <data/array.hpp>
 #include <data/numbers.hpp>
 
-#include <crypto/hash.hpp>
+#include <crypto/hash/SHA1.hpp>
+#include <crypto/hash/SHA2.hpp>
 #include <crypto/PKCS5_PBKDF2_HMAC.hpp>
 #include <crypto/HKDF.hpp>
 

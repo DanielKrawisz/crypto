@@ -5,7 +5,25 @@
 #ifndef CRYPTO_HASH_BITCOIN
 #define CRYPTO_HASH_BITCOIN
 
-#include <crypto/hash/reference.hpp>
+#include <crypto/hash/SHA2.hpp>
+#include <crypto/hash/RIPEMD.hpp>
+
+namespace crypto {
+
+    hash::digest160 Bitcoin_160 (byte_slice);
+    hash::digest256 Bitcoin_256 (byte_slice);
+    hash::digest160 Bitcoin_160 (string_view);
+    hash::digest256 Bitcoin_256 (string_view);
+
+    hash::digest160 inline Bitcoin_160 (string_view b) {
+        return Bitcoin_160 (byte_slice {(const byte *) (b.data ()), b.size ()});
+    }
+
+    hash::digest256 inline Bitcoin_256 (string_view b) {
+        return Bitcoin_256 (byte_slice {(const byte *) (b.data ()), b.size ()});
+    }
+
+}
 
 namespace crypto::hash {
     
@@ -62,6 +80,9 @@ namespace crypto::hash {
             return *this;
         }
     };
+
+    using Bitcoin160_writer = hash::writer<Bitcoin<20>>;
+    using Bitcoin256_writer = hash::writer<Bitcoin<32>>;
 
 }
 
