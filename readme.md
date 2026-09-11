@@ -35,11 +35,15 @@ The library provides cryptographic hash functions, message authentication codes,
         <td><code>crypto/hash/SHA3.hpp</code></td>
     </tr>
     <tr>
-        <td>&#183; <a href="#password-hashing">Password hashing</a></td>
-        <td><code>crypto/hash/internal.hpp</code></td>
+        <td colspan="2">&#183; <a href="#password-hashing">Password hashing</a></td>
     </tr>
     <tr>
-        <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&#183; scrypt</td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; scrypt</td>
+        <td><code>crypto/hash/scrypt.hpp</code></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&#183; Argon2</td>
+        <td><code>crypto/hash/Argon2.hpp</code></td>
     </tr>
     <tr>
         <td colspan="2">&#183; <a href="#encryption">Encryption</a></td>
@@ -282,7 +286,7 @@ data::writer<byte> &write_SHA2_256 (data::writer<byte> &writer, const data::byte
 ```
 ## Password Hashing
 
-The library also provides **scrypt**, a password-hashing and password-based key derivation function.
+The library also provides **scrypt**, and **Argon2**, password-hashing and password-based key derivation function.
 
 A typical cryptographic hash function, such as SHA-256 or BLAKE2, is designed to calculate a digest quickly. This is desirable for most cryptographic applications, but it is undesirable for storing passwords: an attacker who obtains a password database can test enormous numbers of password guesses very quickly.
 

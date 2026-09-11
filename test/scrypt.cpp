@@ -3,8 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <gtest/gtest.h>
-
-#include <crypto/hash/internal.hpp>
+#include <data/string.hpp>
+#include <crypto/hash/scrypt.hpp>
 
 namespace crypto {
 

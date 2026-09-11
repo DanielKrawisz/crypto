@@ -19,7 +19,8 @@ add_executable (
     SHA.cpp
     RIPEMD.cpp
     Bitcoin.cpp
-    internal.cpp
+    scrypt.cpp
+    Argon2.cpp
 
     # key derivation
     key_derivation.cpp
