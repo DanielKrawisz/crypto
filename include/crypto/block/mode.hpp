@@ -73,7 +73,7 @@ namespace crypto::cipher::block {
     template <size_t block_size> using mode_cipher_block_chain = state<mode::CBC, block_size>;
     template <size_t block_size> using mode_cipher_feedback = state<mode::CFB, block_size>;
     template <size_t block_size> using mode_output_feedback = state<mode::OFB, block_size>;
-    template <size_t block_size, endian::order r> using mode_counter = state<mode::OFB, block_size, r>;
+    template <size_t block_size, endian r> using mode_counter = state<mode::OFB, block_size, r>;
 
 /*  -------------------------------------------------------------------
  *  INITIALIZE BLOCK CIPHER STATES
@@ -93,7 +93,7 @@ namespace crypto::cipher::block {
 
         template <size_t block_size> state<mode::CFB, block_size> init_CFB (const initialization_vector<block_size> &iv);
 
-        template <size_t block_size, endian::order r> state<mode::CTR, block_size, r> init_CTR (const math::uint<r, block_size, byte> &iv);
+        template <size_t block_size, endian r> state<mode::CTR, block_size, r> init_CTR (const math::uint<r, block_size, byte> &iv);
     }
 
     template <mode m, typename ...T> auto inline initialize (T &&...z) {
@@ -301,7 +301,7 @@ namespace crypto::cipher::block {
 
     // since there is no rule that says what endian
     // the counter should be, we allow both.
-    template <size_t block_size, endian::order r>
+    template <size_t block_size, endian r>
     struct state<mode::CTR, block_size, r> : streamable_base<block_size> {
 
         constexpr static const mode Mode = mode::CTR;
@@ -800,7 +800,7 @@ namespace crypto::cipher::block {
             return state<mode::CBC, block_size> {iv};
         }
 
-        template <size_t block_size, endian::order r> state<mode::CTR, block_size, r> inline init_CTR (const math::uint<r, block_size, byte> &iv) {
+        template <size_t block_size, endian r> state<mode::CTR, block_size, r> inline init_CTR (const math::uint<r, block_size, byte> &iv) {
             return state<mode::CTR, block_size, r> {iv};
         }
     }

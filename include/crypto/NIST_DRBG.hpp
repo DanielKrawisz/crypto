@@ -202,7 +202,7 @@ namespace crypto::NIST {
         uint32 ReseedCounter;
     };
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r = endian::big>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r = endian::big>
     struct CTR_base : NIST_DRBG<C, key_size> {
         constexpr const static size_t SeedLength = C::BlockSize + (Same<C, cipher::block::TDEA3> ? 21 : key_size);
 
@@ -220,10 +220,10 @@ namespace crypto::NIST {
         CTR_base (): V {}, Key {}, ReseedCounter {0} {}
     };
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, bool df = true, endian::order r = endian::big>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, bool df = true, endian r = endian::big>
     struct CTR_DRBG;
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     struct CTR_DRBG<key_size, C, true, r> : CTR_base<key_size, C, r> {
         using CTR = CTR_base<key_size, C, r>;
 
@@ -245,7 +245,7 @@ namespace crypto::NIST {
 
     struct insufficient_entropy : exception::base<insufficient_entropy> {};
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     struct CTR_DRBG<key_size, C, false, r> : CTR_base<key_size, C, r> {
         using CTR = CTR_base<key_size, C, r>;
 
@@ -322,7 +322,7 @@ namespace crypto::NIST {
         ReseedCounter = 1;
     }
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     CTR_DRBG<key_size, C, true, r>::CTR_DRBG (byte_slice entropy, byte_slice nonce, byte_slice personalization):
     CTR {} {
 
@@ -379,7 +379,7 @@ namespace crypto::NIST {
         ReseedCounter = 1;
     }
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     void CTR_DRBG<key_size, C, true, r>::reseed (byte_slice entropy, byte_slice additional) {
 
         if (entropy.size () < this->MinEntropyLength)
@@ -461,7 +461,7 @@ namespace crypto::NIST {
 
     }
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     void CTR_base<key_size, C, r>::generate (byte *result, size_t remaining, byte_slice additional) {
         if (additional.size () > MaxEntropyLength)
             throw exception {} << "Max length exceeded for additional information to generate from Hash_DRBG";
@@ -538,7 +538,7 @@ namespace crypto::NIST {
         V = MAC::calculate<MAC::HMAC<H>> (Key, V);
     }
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     struct CTR_DRBG<key_size, C, true, r>::BCC_writer final : data::writer<byte> {
         using digest = hash::digest<C::BlockSize>;
         digest &Output;
@@ -554,7 +554,7 @@ namespace crypto::NIST {
 
     // NOTE: this function uses encryption in CTR mode.
     // TODO make it work with what we already have for encryption.
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     void CTR_base<key_size, C, r>::update (const byte_array<SeedLength> &provided) {
         size_t remaining = SeedLength;
 
@@ -576,7 +576,7 @@ namespace crypto::NIST {
     }
 
     // input is required to be a multiple of block size.
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     byte_array<CTR_DRBG<key_size, C, true, r>::CTR::SeedLength>
     CTR_DRBG<key_size, C, true, r>::df (byte_slice input) {
 
@@ -626,14 +626,14 @@ namespace crypto::NIST {
         }
     }
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     CTR_DRBG<key_size, C, true, r>::BCC_writer::BCC_writer (digest &d) :
     Output {d}, Key {}, Index {0} {
         Output = digest {};
         for (int i = 0; i < key_size; i++) Key[i] = i;
     }
 
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     void CTR_DRBG<key_size, C, true, r>::BCC_writer::write (const byte *b, size_t remaining) {
 
         while (remaining >= C::BlockSize - Index) {
@@ -680,7 +680,7 @@ namespace crypto::NIST {
     }
 
     // pad and write to Digest.
-    template <size_t key_size, cipher::block::Cipher<key_size> C, endian::order r>
+    template <size_t key_size, cipher::block::Cipher<key_size> C, endian r>
     CTR_DRBG<key_size, C, true, r>::BCC_writer::~BCC_writer () {
         cipher::block::pad<cipher::block::padding::ONE_AND_ZEROS_PADDING> {}.write (*this, C::BlockSize, Index);
     }
