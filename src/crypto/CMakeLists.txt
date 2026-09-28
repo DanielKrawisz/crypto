@@ -2,15 +2,23 @@
 add_library (hash STATIC)
 add_library (Crypto::hash ALIAS hash)
 
-add_library (crypto STATIC)
-add_library (Crypto::crypto ALIAS crypto)
+add_library (symmetric STATIC)
+add_library (Crypto::symmetric ALIAS symmetric)
+
+add_library (asymmetric INTERFACE)
+add_library (Crypto::asymmetric ALIAS asymmetric)
+add_library (Crypto::crypto ALIAS asymmetric)
 
 set_target_properties (hash PROPERTIES
   OUTPUT_NAME "crypto_hash"
 )
 
-set_target_properties (crypto PROPERTIES
-  OUTPUT_NAME "crypto_crypto"
+set_target_properties (symmetric PROPERTIES
+  OUTPUT_NAME "crypto_symmetric"
+)
+
+set_target_properties (symmetric PROPERTIES
+  OUTPUT_NAME "crypto_asymmetric"
 )
 
 target_include_directories (
@@ -58,7 +66,7 @@ target_link_libraries (
 )
 
 target_include_directories (
-  crypto
+  symmetric
 
   INTERFACE
 
@@ -69,7 +77,7 @@ target_include_directories (
 )
 
 target_sources (
-  crypto
+  symmetric
 
   PRIVATE
 
@@ -77,14 +85,35 @@ target_sources (
   block.cpp
 )
 
-target_compile_features (crypto PUBLIC cxx_std_23)
-set_target_properties (crypto PROPERTIES CXX_EXTENSIONS ON)
+target_compile_features (symmetric PUBLIC cxx_std_23)
+set_target_properties (symmetric PROPERTIES CXX_EXTENSIONS ON)
 
 target_link_libraries (
-  crypto
+  symmetric
 
   PUBLIC
 
+  Crypto::hash
+  Data::data
+)
+
+target_include_directories (
+  asymmetric
+
+  INTERFACE
+
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated/>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries (
+  asymmetric
+
+  INTERFACE
+
+  Crypto::symmetric
   Crypto::hash
   Data::data
 )
@@ -94,7 +123,7 @@ configure_file (
     ${CMAKE_CURRENT_BINARY_DIR}/generated/crypto/version.hpp
 )
 
-get_target_property (OUT Crypto::crypto LINK_LIBRARIES)
+get_target_property (OUT Crypto::symmetric LINK_LIBRARIES)
 
 include (GNUInstallDirs)
 
@@ -105,7 +134,7 @@ install (
 )
 
 install (
-  TARGETS crypto hash
+  TARGETS asymmetric symmetric hash
   EXPORT CryptoTargets
   ARCHIVE
 )
@@ -148,4 +177,4 @@ set (CPACK_PACKAGE_CONTACT "email@example.com")
 set (CPACK_PACKAGE_DESCRIPTION "WhatsOnChain API")
 include (CPack)
 
-include(GNUInstallDirs)
+include (GNUInstallDirs)

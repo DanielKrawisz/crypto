@@ -33,7 +33,7 @@ add_executable (
     elliptic_curve.cpp
 )
 
-target_link_libraries (unit_tests PRIVATE crypto Data::numbers gtest_main gmock)
+target_link_libraries (unit_tests PRIVATE symmetric Data::numbers gtest_main gmock)
 
 gtest_discover_tests (unit_tests)
 

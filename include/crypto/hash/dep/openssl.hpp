@@ -2,9 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CRYPTO_HASH_OPENSSL
-#define CRYPTO_HASH_OPENSSL
+#pragma once
 
+#include <cassert>
 #include <crypto/hash.hpp>
 #include <openssl/evp.h>
 
@@ -58,5 +58,3 @@ namespace crypto::hash::OpenSSL {
     };
 
 }
-
-#endif

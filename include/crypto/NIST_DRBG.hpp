@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CRYPTO_NIST_DRBG
-#define CRYPTO_NIST_DRBG
+#pragma once
 
 #include <cryptopp/drbg.h>
 
@@ -18,6 +17,7 @@
 #include <crypto/MAC/HMAC.hpp>
 #include <crypto/block/cipher.hpp>
 #include <crypto/block/padding.hpp>
+#include <crypto/block/cryptopp.hpp>
 
 namespace crypto::NIST {
 
@@ -686,6 +686,4 @@ namespace crypto::NIST {
     }
 
 }
-
-#endif
 

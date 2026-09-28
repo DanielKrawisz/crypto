@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CRYPTO_BLOCK_CRYPTOPP
-#define CRYPTO_BLOCK_CRYPTOPP
+#pragma once
 
 #include <cryptopp/modes.h>
 
@@ -150,5 +149,3 @@ namespace crypto::cipher::block {
         CryptoPP::DES_EDE3::Decryption {k.data (), 24}.ProcessBlock (in.data (), const_cast<byte *> (out.data ()));
     }
 }
-
-#endif

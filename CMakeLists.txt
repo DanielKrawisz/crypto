@@ -126,17 +126,6 @@ endif ()
 # Dependencies
 # ---------------------------------------------------------
 
-# required for pretty much everything.
-find_package (Boost 1.88 COMPONENTS filesystem process thread chrono log_setup log REQUIRED)
-# if we do not have boost
-#   * linux:
-#     * go to the boost website, download and extract the latest version.
-#     * `./bootstrap.sh`
-#     * `./b2`
-#     * `sudo ./b2 install`
-
-add_definitions ("-DHAS_BOOST")
-
 message (STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
 message (STATUS "Boost library dirs: ${Boost_LIBRARY_DIRS}")
 

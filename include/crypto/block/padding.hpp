@@ -71,6 +71,7 @@ namespace crypto::cipher::block {
     };
 
     data::writer<byte> &add_padding (data::writer<byte> &, padding_scheme, size_t block_size, size_t bytes_written);
+
     data::reader<byte> &skip_padding (data::reader<byte> &, padding_scheme, size_t block_size, size_t bytes_read);
 
     void inline add_padding_writer::complete () {

@@ -5,7 +5,6 @@
 #include <gtest/gtest.h>
 
 #include <crypto/NIST_DRBG.hpp>
-#include <crypto/block/cryptopp.hpp>
 
 #include <data/tuple.hpp>
 #include <data/list.hpp>
