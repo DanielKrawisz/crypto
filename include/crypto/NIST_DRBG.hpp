@@ -450,7 +450,7 @@ namespace crypto::NIST {
             do {
                 this->V = MAC::calculate<MAC::HMAC<H>> (this->Key, this->V);
                 w << this->V;
-            } while (w.TotalSize < size);
+            } while (w.Written < size);
         });
 
         std::copy (result.data (), result.data () + size, b);

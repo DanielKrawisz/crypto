@@ -14,8 +14,6 @@ set (CMAKE_EXPERIMENTAL_CXX_IMPORT_STD
     "d0edc3af-4c50-42ea-a356-e2862fe7a444"
 )
 
-set (CMAKE_CXX_MODULE_STD ON)
-
 # ---------------------------------------------------------
 #  Project info
 # ---------------------------------------------------------
@@ -29,8 +27,13 @@ project (
 set (CMAKE_CXX_STANDARD 23)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set (CMAKE_CXX_SCAN_FOR_MODULES ON)
-set (CMAKE_CXX_MODULE_STD ON)
+# We tried earlier to upgrade to gcc 15 and 16 to use modules
+# But that didn't work. These versions of gcc were too unstable.
+# Uncomment the next 3 lines to re-enable modules.
+
+#set (CMAKE_CXX_MODULE_STD ON)
+#set (CMAKE_CXX_SCAN_FOR_MODULES ON)
+#set (CMAKE_CXX_MODULE_STD ON)
 
 # ---------------------------------------------------------
 #  Build type setup (default to Debug for single-config)
