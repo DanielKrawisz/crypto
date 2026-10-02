@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_CRYPTO_ELLIPTIC_CURVE
-#define DATA_CRYPTO_ELLIPTIC_CURVE
+#pragma once
 
 #include <data/math/algebra/elliptic_curve.hpp>
 #include <data/math/algebra/finite_field.hpp>
@@ -126,6 +125,4 @@ namespace data::crypto {
     }*/
 
 }
-
-#endif
 

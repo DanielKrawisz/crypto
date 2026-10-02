@@ -87,8 +87,8 @@ namespace data::crypto {
 
         // the curve
         constexpr static const math::Weierstrauss<scalar, coord> curve {
-            coord {"0x000000000000000000000000000000000000000000000000"},
-            coord {"0x000000000000000000000000000000000000000000000005"}};
+            coord {"0x00000000000000000000000000000000000000000000000000000000"},
+            coord {"0x00000000000000000000000000000000000000000000000000000005"}};
 
         using affine_point = math::elliptic_curve<curve>::affine_point;
 
