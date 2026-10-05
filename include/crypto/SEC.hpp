@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DATA_MATH_CRYPTO_SEC
-#define DATA_MATH_CRYPTO_SEC
+#pragma once
 
 #include <data/integral.hpp>
 #include <data/math/algebra/finite_field.hpp>
@@ -187,6 +186,4 @@ namespace data::crypto::SEC {
         1};
 
 }
-
-#endif
 

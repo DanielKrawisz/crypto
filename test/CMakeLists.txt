@@ -31,9 +31,15 @@ add_executable (
     secret_share.cpp
 
     elliptic_curve.cpp
+
+    DiffieHellman.cpp
+    RSA.cpp
+    DSA.cpp
+    Rabin.cpp
+    ElGamel.cpp
 )
 
-target_link_libraries (unit_tests PRIVATE symmetric Data::numbers gtest_main gmock)
+target_link_libraries (unit_tests PRIVATE asymmetric Data::numbers gtest_main gmock)
 
 gtest_discover_tests (unit_tests)
 
