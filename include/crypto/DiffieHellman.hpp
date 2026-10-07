@@ -55,6 +55,7 @@ namespace crypto {
     template <typename N, auto gen, auto order>
     struct diffie_hellman : group<gen, order> {};
 
+    // standard primes for prime field diffie helman.
     namespace rfc3526 {
         // modp5
         // modp14

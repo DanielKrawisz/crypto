@@ -2,9 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CRYPTO_ONE_WAY
-#define CRYPTO_ONE_WAY
+#pragma once
 
+#include <data/random.hpp>
 #include <data/function.hpp>
 
 namespace crypto {
@@ -24,24 +24,30 @@ namespace crypto {
     // is a non-invertable function between
     // sk and pk. 
     template <typename sk, typename pk> 
-    concept keypair = requires (sk s) {
+    concept Keypair = requires (sk s) {
         { to_public (s) } -> Same<pk>;
     };
-    
-    template <typename sk, typename pk, typename message, typename signature> 
-    concept signature_scheme = keypair<sk, pk> && requires (message m, sk k) {
-        { sign (m, k) } -> Same<signature>;
-    } && requires (message m, signature x, pk k) {
-        { verify (m, x, k) } -> Same<bool>;
+
+    template <typename ks>
+    concept KeySystem = Keypair<typename ks::secret, typename ks::pubkey> &&
+    requires (random::source &r) {
+        { ks::generate (r) } -> Same<typename ks::secret>;
+    };
+
+    template <typename es>
+    concept EncryptionScheme = KeySystem<es> &&
+    requires (typename es::message m, typename es::pubkey k) {
+        { es::encrypt (m, k) } -> Same<typename es::encrypted>;
+    } && requires (typename es::encrypted m, typename es::secret k) {
+        { es::decrypt (m, k) } -> Same<typename es::message>;
     };
     
-    template <typename sk, typename pk, typename message, typename encrypted> 
-    concept encryption_scheme = keypair<sk, pk> && requires (message m, pk k) {
-        { encrypt (m, k) } -> Same<encrypted>;
-    } && requires (encrypted m, sk k) {
-        {decrypt (m, k) } -> Same<message>;
+    template <typename ss>
+    concept SignatureScheme = KeySystem<ss> &&
+    requires (typename ss::message m, typename ss::pubkey k) {
+        { ss::sign (m, k) } -> Same<typename ss::signature>;
+    } && requires (typename ss::message m, typename ss::signature x, typename ss::pubkey k) {
+        { ss::verify (m, x, k) } -> Same<bool>;
     };
     
 }
-
-#endif

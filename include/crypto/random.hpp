@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CRYPTO_RANDOM
-#define CRYPTO_RANDOM
+#pragma once
 
 #include <cryptopp/osrng.h>
 #include <cryptopp/secblock.h>
@@ -63,6 +62,3 @@ namespace crypto::random {
     source &get ();
 
 }
-
-#endif
-

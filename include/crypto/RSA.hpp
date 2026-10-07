@@ -6,7 +6,8 @@
 
 #include <data/exception.hpp>
 #include <data/numbers.hpp>
-#include <data/math/number/NTL/prime.hpp>
+#include <data/math/number/NTL/random.hpp>
+#include <data/math/power.hpp>
 #include <crypto/random.hpp>
 #include <crypto/hash.hpp>
 
@@ -14,16 +15,7 @@
 // RFC 8017 specifies RSAES-OAEP as the encryption scheme to support for new applications. It combines RSA with an encoding procedure that incorporates randomness and a hash function.
 
 namespace crypto {
-/*
-    There are several related considerations:
 
-    Both primes must be sufficiently large. Otherwise, factoring \(n\) may be feasible.
-    The primes must be distinct. If \(p=q\), then \(n=p^2\), which is easy to factor by taking its square root.
-    The primes should not be too close. If \(p\) and \(q\) are exceptionally close, Fermat's factorization method can factor \(n\) efficiently.
-    The primes must satisfy the RSA exponent requirements. For the chosen public exponent \(e\), we need \(\gcd(e,\lambda(n))=1\).
-
-    The third point is particularly interesting because it gives us a concrete condition to consider when designing prime generation.
-    */
 
     template <typename N, size_t bits>
     struct RSA {
@@ -39,28 +31,35 @@ namespace crypto {
             pubkey to_public () const;
         };
 
-        static secret generate (random::source &);
-        static N encrypt (const N &, const pubkey &);
-        static N decrypt (const N &, const secret &);
+        using message = N;
+        using encrypted = N;
+
+        static secret generate (random::source &, N e = 65537);
+        static encrypted encrypt (const message &, const pubkey &);
+        static message decrypt (const encrypted &, const secret &);
     };
 
-    template <typename N, size_t bits> RSA<N, bits>::secret RSA<N, bits>::generate (random::source &x) {
-        constexpr size_t p_size = bits / 2;
+    template struct RSA<N, 1024>;
+    template struct RSA<N, 2048>;
+    template struct RSA<N, 3072>;
+    template struct RSA<N, 4096>;
+
+    template <typename N, size_t bits> RSA<N, bits>::secret RSA<N, bits>::generate (random::source &x, N e) {
+        constexpr size_t p_size = bits / 2 + 1;
         constexpr size_t q_size = even (bits) ? bits / 2 : bits / 2 + 1;
 
         N p;
         N q;
-        N e = 65537; // standard choice.
 
         while (true) {
             // generate two primes
-            p = math::number::generate_random_prime<N> (x, p_size, 100);
-            p = math::number::generate_random_prime<N> (x, q_size, 100);
+            p = math::number::generate_random_prime<N> (x, p_size);
+            q = math::number::generate_random_prime<N> (x, q_size);
 
             N n = p * q;
 
-            // make sure their product as the right size. It must be bits bits.
-            if (bitwidth (n) != bits) continue;
+            // make sure their product as the right size. There is approximately a 3/7 chance that it is too big.
+            if (bit_width (n) != bits) continue;
 
             N difference = p > q ? p - q : q - p;
 
@@ -70,7 +69,7 @@ namespace crypto {
 
             N carmichael = LCM (p - 1, q - 1);
 
-            maybe<N> d = invert_mod (e, carmichael);
+            maybe<N> d = invert_mod (e, math::nonzero {carmichael});
 
             if (d) return secret {p, q, *d};
         }
@@ -81,12 +80,23 @@ namespace crypto {
 
         N carmichael = LCM (p - 1, q - 1);
 
-        maybe<N> e = invert_mod (e, carmichael);
+        maybe<N> e = invert_mod (d, math::nonzero {carmichael});
 
         if (!e) throw exception {} << "invalid scecret key";
 
         return pubkey {p * q, *e};
 
+    }
+
+    template <typename N, size_t bits>
+    RSA<N, bits>::encrypted inline RSA<N, bits>::encrypt (const message &m, const pubkey &pk) {
+        return pow_mod (m, pk.e, math::nonzero {pk.n});
+    }
+
+    // TODO we can use the chinese remainder theorem to optimize this.
+    template <typename N, size_t bits>
+    RSA<N, bits>::message inline RSA<N, bits>::decrypt (const encrypted &c, const secret &sk) {
+        return pow_mod (c, sk.d, math::nonzero {sk.p * sk.q});
     }
 
 }
