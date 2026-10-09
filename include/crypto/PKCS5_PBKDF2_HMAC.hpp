@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CRYPTO_PKCS5_PBKDF2_HMAC
-#define CRYPTO_PKCS5_PBKDF2_HMAC
+#pragma once
 
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/pwdbased.h>
@@ -47,5 +46,3 @@ namespace crypto {
     }
 
 }
-
-#endif

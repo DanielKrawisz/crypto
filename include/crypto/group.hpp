@@ -22,7 +22,7 @@ namespace crypto {
             scalar p;
             while (true) {
                 x >> p.Value;
-                if (p.valid () && p > 0) return p;
+                if (p.valid ()) return p;
             }
         }
 
