@@ -16,8 +16,20 @@ namespace crypto {
     template <typename nat, size_t bits>
     struct Rabin {
         using natural = nat;
+
+        struct pubkey;
+        struct secret;
+
+        using message = natural;
+        using encrypted = natural;
+
+        static encrypted encrypt (const message &, const pubkey &);
+        static message decrypt (const encrypted &, const secret &);
+
         struct pubkey {
             natural N;
+            bool operator == (const pubkey &) const;
+            encrypted encrypt (const message &) const;
         };
 
         struct secret {
@@ -26,9 +38,12 @@ namespace crypto {
             pubkey to_public () const {
                 return secret {P * Q};
             }
+            bool operator == (const secret &) const;
+            bool valid () const;
+            message decrypt (const encrypted &) const;
         };
 
-        static natural generate_Blum_prime (random::source &x, size_t size) {
+        static math::number::prime<natural> generate_Blum_prime (random::source &x, size_t size) {
             while (true) {
                 natural p = math::number::generate_random_prime<natural> (x, size);
                 if (mod (p, 4) == 3) return p;
@@ -61,28 +76,32 @@ namespace crypto {
                 return secret {p, q};
             }
         }
-
-        using message = natural;
-        using encrypted = natural;
-
-        static encrypted encrypt (const message &, const pubkey &);
-        static message decrypt (const encrypted &, const secret &);
     };
 
     template <typename nat, size_t bits>
     struct RabinWilliams {
         using natural = nat;
+
+        struct pubkey;
+        struct secret;
+
+        using signature = natural;
+
+        template <size_t size> static signature sign (const hash::digest<size> &, const secret &);
+        template <size_t size> static bool verify (const hash::digest<size> &, const pubkey &);
+
         struct pubkey {
             natural N;
+            bool operator == (const pubkey &) const;
+
         };
 
         struct secret {
             natural P;
             natural Q;
             natural C;
-            pubkey to_public () const {
-                return secret {P * Q};
-            }
+            pubkey to_public () const;
+            bool operator == (const secret &) const;
         };
 
         static secret generate (random::source &x) {
@@ -105,18 +124,15 @@ namespace crypto {
                 // make sure their product as the right size. It must be bits bits.
                 if (bitwidth (n) != bits) continue;
 
-                N difference = p > q ? p - q : q - p;
+                natural difference = p > q ? p - q : q - p;
 
                 // make sure their difference is big enough.
                 // NIST recommendation for RSA:
-                if (difference <= N {1} << (bits / 2 - 100)) continue;
+                if (difference <= natural {1} << (bits / 2 - 100)) continue;
 
                 return secret {p, q};
             }
         }
-
-        static natural sign (const natural &, const secret &);
-        static bool verify (const natural &, const pubkey &);
     };
 
 }

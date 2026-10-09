@@ -22,19 +22,8 @@ namespace crypto {
         using scalar = math::prime_field<order, decltype (std::declval<group<gen, order>> ().Value)>;
         using element = G::element;
 
-        struct pubkey : element {
-            using element::element;
-        };
-
-        struct secret : scalar {
-            pubkey to_public () const {
-                return group<gen, order>::exp (gen, *this);
-            }
-        };
-
-        static secret generate (random::source &x) {
-            return group<gen, order>::generate (x);
-        }
+        struct pubkey;
+        struct secret;
 
         using message = scalar;
 
@@ -56,6 +45,31 @@ namespace crypto {
 
         template <size_t size>
         static bool verify (const hash::digest<size> &, const signature &, const pubkey &);
+
+        struct pubkey : element {
+            using element::element;
+            template <size_t size> bool verify (const hash::digest<size> &h, const signature &x) const {
+                return DSA::verify (h, x, *this);
+            }
+        };
+
+        struct secret : scalar {
+            pubkey to_public () const {
+                return group<gen, order>::exp (gen, *this);
+            }
+
+            template <size_t size> signature sign (const hash::digest<size> &h, random::source &oo) const {
+                return DSA::sign (h, *this, oo);
+            }
+
+            template <size_t size> signature sign (const hash::digest<size> &h, function<secret ()> f) const {
+                return DSA::sign (h, *this, f);
+            }
+        };
+
+        static secret generate (random::source &x) {
+            return group<gen, order>::generate (x);
+        }
     };
 
     template <auto gen, auto order> requires PrimeField<decltype (gen)> template <size_t size>

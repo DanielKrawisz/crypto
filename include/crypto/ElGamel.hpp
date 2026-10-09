@@ -22,27 +22,8 @@ namespace crypto {
         using scalar = G::scalar;
         using element = G::element;
 
-        struct pubkey : element {
-            using group<gen, order>::element::element;
-        };
-
-        struct secret : scalar {
-            pubkey to_public () const {
-                return G::exp (gen, *this);
-            }
-
-            bool valid () const {
-                return scalar::valid () && *this != 0;
-            }
-        };
-
-        static secret generate (random::source &oo) {
-            while (true) {
-                secret k;
-                oo >> k;
-                if (k.valid ()) return k;
-            }
-        }
+        struct pubkey;
+        struct secret;
 
         using message = element;
 
@@ -71,6 +52,28 @@ namespace crypto {
         template <size_t size> static signature sign (const hash::digest<size> &, const secret &, function<secret ()>);
 
         template <size_t size> static bool verify (const hash::digest<size> &, const signature &, const pubkey &);
+
+        struct pubkey : element {
+            using group<gen, order>::element::element;
+        };
+
+        struct secret : scalar {
+            pubkey to_public () const {
+                return G::exp (gen, *this);
+            }
+
+            bool valid () const {
+                return scalar::valid () && *this != 0;
+            }
+        };
+
+        static secret generate (random::source &oo) {
+            while (true) {
+                secret k;
+                oo >> k;
+                if (k.valid ()) return k;
+            }
+        }
     };
 
     template <auto gen, auto order>

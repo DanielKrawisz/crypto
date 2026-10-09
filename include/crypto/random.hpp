@@ -26,6 +26,7 @@ namespace crypto::random {
             engine::MaxStrength;
         };
 
+    // TODO we should not need this.
     template <typename engine> concept RNG = RNG<engine> &&
         std::derived_from<engine, CryptoPP::RandomNumberGenerator>;
 
