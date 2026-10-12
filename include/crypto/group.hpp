@@ -6,6 +6,7 @@
 
 #include <data/math/power.hpp>
 #include <data/math/group.hpp>
+#include <data/math/number/random.hpp>
 #include <data/math.hpp>
 #include <crypto/random.hpp>
 
@@ -18,12 +19,8 @@ namespace crypto {
         using element = decltype (gen);
         using scalar = math::number::modular<order>;
 
-        static scalar generate (random::source &x) {
-            scalar p;
-            while (true) {
-                x >> p.Value;
-                if (p.valid ()) return p;
-            }
+        static void generate (random::source &oo, scalar &p) {
+            p = scalar {math::number::generate_random_below<decltype (order)> (oo, order)};
         }
 
         static constexpr element exp (
@@ -44,5 +41,4 @@ namespace crypto {
     concept PrimeField = is_prime_field<X>::value;
 
 }
-
 

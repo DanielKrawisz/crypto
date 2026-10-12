@@ -129,9 +129,6 @@ endif ()
 # Dependencies
 # ---------------------------------------------------------
 
-message (STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
-message (STATUS "Boost library dirs: ${Boost_LIBRARY_DIRS}")
-
 find_package (OpenSSL REQUIRED Crypto SSL)
 # if we do not have openssl
 #   * on linux, `sudo apt-get install libssl-dev`
