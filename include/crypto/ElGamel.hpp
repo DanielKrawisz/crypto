@@ -12,7 +12,7 @@ namespace crypto {
     // prime field required. For prime P, order is P - 1. Generator may not
     // generate entire multiplicative group.
     template <auto gen, auto order>
-    requires PrimeField<decltype (gen)> && (decltype (gen)::Modulus == order - 1)
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
     struct ElGamel : group<gen, order> {
 
         // it is required that order == P - 1, where P is the order of the prime field.
@@ -29,6 +29,16 @@ namespace crypto {
 
         using encrypted = pair<element, element>;
 
+        using digest = scalar;
+
+        struct signature {
+            element R;
+            scalar S;
+            bool operator == (const signature &x) const {
+                return R == x.R && S == x.S;
+            }
+        };
+
         // encrypt with a random k
         static encrypted encrypt (const message &m, const pubkey &, random::source &x);
 
@@ -40,21 +50,30 @@ namespace crypto {
 
         static message decrypt (const encrypted &, const secret &);
 
-        using signature = struct {
-            element R;
-            scalar S;
-        };
-
         // sign with a random k
-        template <size_t size> static signature sign (const hash::digest<size> &, const secret &, random::source &x);
+        static signature sign (const digest &, const secret &, random::source &x);
 
         // sign with a function to generate k.
-        template <size_t size> static signature sign (const hash::digest<size> &, const secret &, function<secret ()>);
+        static signature sign (const digest &, const secret &, function<secret ()>);
 
-        template <size_t size> static bool verify (const hash::digest<size> &, const signature &, const pubkey &);
+        static bool verify (const signature &, const digest &, const pubkey &);
+
+        static secret generate_key (random::source &oo);
 
         struct pubkey : element {
             using group<gen, order>::element::element;
+
+            encrypted encrypt (const message &m, random::source &oo) {
+                return ElGamel::encrypt (m, *this, oo);
+            }
+
+            encrypted encrypt (const message &m, function<secret ()> &f) {
+                return ElGamel::encrypt (m, *this, f);
+            }
+
+            bool verify (const signature &x, const digest &h) {
+                return ElGamel::verify (x, h, *this);
+            }
         };
 
         struct secret : scalar {
@@ -65,69 +84,91 @@ namespace crypto {
             bool valid () const {
                 return scalar::valid () && *this != 0;
             }
-        };
 
-        static secret generate (random::source &oo) {
-            while (true) {
-                secret k;
-                oo >> k;
-                if (k.valid ()) return k;
+            message decrypt (const encrypted &c) const {
+                return ElGamel::decrypt (c, *this);
             }
-        }
+
+            signature sign (const digest &h, random::source &oo) {
+                return ElGamel::sign (h, *this, oo);
+            }
+
+            signature sign (const digest &h, function<secret ()> &f) {
+                return ElGamel::sign (h, *this, f);
+            }
+
+            friend random::source &operator >> (random::source &r, secret &k) {
+                while (true) {
+                    group<gen, order>::generate (r, k);
+                    // if the scalar we get happens to be zero,
+                    // the key is invalid. This is unlikely and
+                    // we just try again.
+                    if (k.valid ()) return r;
+                }
+            }
+        };
     };
 
     template <auto gen, auto order>
-    requires PrimeField<decltype (gen)> && (decltype (gen)::Modulus == order - 1)
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
+    ElGamel<gen, order>::secret ElGamel<gen, order>::generate_key (random::source &oo) {
+        secret k;
+        oo >> k;
+        return k;
+    }
+
+    template <auto gen, auto order>
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
     ElGamel<gen, order>::encrypted inline ElGamel<gen, order>::encrypt (const message &m, const pubkey &y, random::source &oo) {
         return ElGamel::encrypt (m, y, [&oo] () {
-            return generate (oo);
+            return generate_key (oo);
         });
     }
 
     template <auto gen, auto order>
-    requires PrimeField<decltype (gen)> && (decltype (gen)::Modulus == order - 1)
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
     ElGamel<gen, order>::encrypted inline ElGamel<gen, order>::encrypt (const message &m, const pubkey &y, function<secret ()> f) {
         while (true) {
             secret k = f ();
             if (!k.valid () || k == 0) continue;
-            return encrypted {exp (gen, k), m * G::exp (y, k)};
+            return encrypted {G::exp (gen, k), m * G::exp (y, k)};
         }
     }
 
     template <auto gen, auto order>
-    requires PrimeField<decltype (gen)> && (decltype (gen)::Modulus == order - 1)
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
     ElGamel<gen, order>::message inline ElGamel<gen, order>::decrypt (const encrypted &c, const secret &z) {
         return c.second / G::exp (c.first, z);
     }
 
     template <auto gen, auto order>
-    requires PrimeField<decltype (gen)> && (decltype (gen)::Modulus == order - 1) template <size_t size>
-    ElGamel<gen, order>::signature inline ElGamel<gen, order>::sign (const hash::digest<size> &h, const secret &z, random::source &oo) {
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
+    ElGamel<gen, order>::signature inline ElGamel<gen, order>::sign (const digest &h, const secret &z, random::source &oo) {
         return ElGamel::sign (h, z, [&oo] () {
-            return generate (oo);
+            return generate_key (oo);
         });
     }
 
     template <auto gen, auto order>
-    requires PrimeField<decltype (gen)> && (decltype (gen)::Modulus == order - 1) template <size_t size>
-    ElGamel<gen, order>::signature inline ElGamel<gen, order>::sign (const hash::digest<size> &h, const secret &z, function<secret ()> f) {
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
+    ElGamel<gen, order>::signature inline ElGamel<gen, order>::sign (const digest &h, const secret &z, function<secret ()> f) {
         while (true) {
             secret k = f ();
             if (!k.valid ()) continue;
-            auto kinv = invert_mod (k, order);
+            auto kinv = invert_mod (k.Value, math::nonzero {order});
             if (!kinv) continue;
             element r = G::exp (gen, k);
             if (r == 0) continue;
-            auto ss = scalar (h) - scalar (r) * z;
+            auto ss = h - scalar (r) * z;
             if (ss == 0) continue;
-            return {r, (ss) * *kinv};
+            return {r, ss * scalar {*kinv}};
         }
     }
 
     template <auto gen, auto order>
-    requires PrimeField<decltype (gen)> && (decltype (gen)::Modulus == order - 1) template <size_t size>
-    bool inline ElGamel<gen, order>::verify (const hash::digest<size> &h, const signature &x, const pubkey &y) {
-        return G::exp (gen, scalar (h)) == G::exp (x.R, x.S) * G::exp (y, scalar (x.first));
+    requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
+    bool inline ElGamel<gen, order>::verify (const signature &x, const digest &h, const pubkey &y) {
+        return G::exp (gen, h) == G::exp (x.R, x.S) * G::exp (y, scalar (x.R));
     }
 }
 

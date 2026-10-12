@@ -4,6 +4,12 @@
 
 #include <gtest/gtest.h>
 #include <crypto/Rabin.hpp>
+#include <data/math/number/eratosthenes.hpp>
+#include <data/math/number/primitive_root.hpp>
+#include <data/math/number/NTL/random.hpp>
 
-namespace crypto {}
+namespace crypto {
+
+
+}
 

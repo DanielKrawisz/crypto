@@ -5,6 +5,7 @@
 #pragma once
 
 #include <data/function.hpp>
+#include <crypto/hash.hpp>
 #include <crypto/group.hpp>
 
 namespace crypto {
@@ -13,13 +14,12 @@ namespace crypto {
     // Thus, the space of keys only covers one prime-order subgroup of
     // the multiplicative group mod P.
     // it is optimal to use a so-called "safe" prime.
-    template <auto gen, auto order>
-    requires PrimeField<decltype (gen)>
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
     struct DSA : group<gen, order> {
 
         using G = group<gen, order>;
 
-        using scalar = math::prime_field<order, decltype (std::declval<group<gen, order>> ().Value)>;
+        using scalar = math::prime_field<order, decltype (gen.Value)>;
         using element = G::element;
 
         struct pubkey;
@@ -27,76 +27,109 @@ namespace crypto {
 
         using message = scalar;
 
+        using digest = scalar;
+
         struct signature {
             scalar R;
             scalar S;
+            bool operator == (const signature &x) const;
         };
 
         // sign with a random k
-        template <size_t size>
-        static signature sign (const hash::digest<size> &, const secret &, random::source &);
+        static signature sign (const digest &, const secret &, random::source &);
 
         // sign with a function that generates k somehow.
         // it is theoretically possible for the signature to fale with a
         // given k, though very unlikely, so we need to be able to
         // regenerate a new one if we have to.
-        template <size_t size>
-        static signature sign (const hash::digest<size> &, const secret &, function<secret ()>);
+        static signature sign (const digest &, const secret &, function<secret ()>);
 
-        template <size_t size>
-        static bool verify (const hash::digest<size> &, const signature &, const pubkey &);
+        static bool verify (const signature &, const digest &, const pubkey &);
 
         struct pubkey : element {
             using element::element;
-            template <size_t size> bool verify (const hash::digest<size> &h, const signature &x) const {
-                return DSA::verify (h, x, *this);
-            }
+            bool verify (const signature &x, const digest &h) const;
         };
 
         struct secret : scalar {
-            pubkey to_public () const {
-                return group<gen, order>::exp (gen, *this);
-            }
+            pubkey to_public () const;
 
-            template <size_t size> signature sign (const hash::digest<size> &h, random::source &oo) const {
-                return DSA::sign (h, *this, oo);
-            }
+            signature sign (const digest &h, random::source &oo) const;
+            signature sign (const digest &h, function<secret ()> f) const;
 
-            template <size_t size> signature sign (const hash::digest<size> &h, function<secret ()> f) const {
-                return DSA::sign (h, *this, f);
+            friend random::source &operator >> (random::source &oo, secret &k) {
+                while (true) {
+                    group<gen, order>::generate (oo, k);
+                    if (k.valid ()) return oo;
+                }
             }
         };
 
-        static secret generate (random::source &x) {
-            return group<gen, order>::generate (x);
+        static secret generate_key (random::source &oo) {
+            secret k {};
+            oo >> k;
+            return k;
         }
     };
 
-    template <auto gen, auto order> requires PrimeField<decltype (gen)> template <size_t size>
-    DSA<gen, order>::signature DSA<gen, order>::sign (const hash::digest<size> &m, const secret &k, random::source &oo) {
-        return sign (m, k, [oo] () {
-            generate (oo);
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    DSA<gen, order>::signature DSA<gen, order>::sign (const digest &h, const secret &k, random::source &oo) {
+        return sign (h, k, [&oo] () {
+            return generate_key (oo);
         });
     }
 
-    template <auto gen, auto order> requires PrimeField<decltype (gen)> template <size_t size>
-    DSA<gen, order>::signature DSA<gen, order>::sign (const hash::digest<size> &h, const secret &z, function<secret ()> f) {
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    DSA<gen, order>::signature DSA<gen, order>::sign (const digest &h, const secret &z, function<secret ()> f) {
         while (true) {
             auto k = f ();
             if (!k.valid ()) continue;
             scalar r = scalar (G::exp (gen, k));
             if (r == 0) continue;
             auto kinv = ~k; // this will always exist
-            scalar s = kinv * (scalar (h) - z * r);
+            scalar s = kinv * (h + z * r);
             if (s == 0) continue;
             return {r, s};
         }
     }
 
-    template <auto gen, auto order> requires PrimeField<decltype (gen)> template <size_t size>
-    bool DSA<gen, order>::verify (const hash::digest<size> &h, const signature &x, const pubkey &y) {
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    bool DSA<gen, order>::verify (const signature &x, const digest &h, const pubkey &y) {
+        if (x.R == 0 || x.R >= order) return false;
+        if (x.S == 0 || x.S >= order) return false;
+
         auto w = ~x.S;
-        return x.R == G::exp (gen, scalar (h) * w) * G::exp (gen, x.R * w);
+        auto u1 = h * w;
+        auto u2 = x.R * w;
+
+        return scalar (G::exp (gen, u1) * G::exp (y, u2)) == x.R;
     }
+
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    bool inline DSA<gen, order>::signature::operator == (const signature &x) const {
+        return R == x.R && S == x.S;
+    }
+
+
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    bool inline DSA<gen, order>::pubkey::verify (const signature &x, const digest &h) const {
+        return DSA::verify (x, h, *this);
+    }
+
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    DSA<gen, order>::pubkey inline DSA<gen, order>::secret::to_public () const {
+        return group<gen, order>::exp (gen, *this);
+    }
+
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    DSA<gen, order>::signature inline DSA<gen, order>::secret::sign (const digest &h, random::source &oo) const {
+        return DSA::sign (h, *this, oo);
+    }
+
+    template <auto gen, auto order> requires PrimeField<decltype (gen)>
+    DSA<gen, order>::signature inline DSA<gen, order>::secret::sign (const digest &h, function<secret ()> f) const {
+        return DSA::sign (h, *this, f);
+    }
+
 }
 
