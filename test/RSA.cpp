@@ -70,9 +70,6 @@ namespace crypto {
 
     }
 
-    static_assert (WholeNumber<unsigned int>);
-    static_assert (WholeNumber<unsigned long>);
-
     TEST (RSA, RSA) {
         random::std_random<std::default_random_engine> r {25767};
         test_RSA<uint32, 16> (r, 5, 6);

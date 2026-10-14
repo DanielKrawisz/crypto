@@ -19,7 +19,13 @@ namespace crypto {
 
         using G = group<gen, order>;
 
-        using scalar = math::prime_field<order, decltype (gen.Value)>;
+        struct scalar : math::prime_field<order, decltype (gen.Value)> {
+            using math::prime_field<order, decltype (gen.Value)>::prime_field;
+
+            template <endian r, size_t size, std::unsigned_integral word>
+            scalar (const math::uint<r, size, word> &);
+        };
+
         using element = G::element;
 
         struct pubkey;

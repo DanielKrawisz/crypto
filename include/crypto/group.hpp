@@ -40,5 +40,12 @@ namespace crypto {
     template <typename X>
     concept PrimeField = is_prime_field<X>::value;
 
+    namespace NIST {
+
+        template <auto order, endian r, size_t s, std::unsigned_integral w>
+        math::number::modular<order> bits_to_scalar (const math::uint<r, s, w> &);
+    }
+
+    // RFC 9380
 }
 
