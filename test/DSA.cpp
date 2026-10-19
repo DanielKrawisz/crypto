@@ -442,6 +442,7 @@ namespace crypto {
         constexpr static const auto Order = TestFixture::Order;
 
         test_DSA<G> (r_dsa, uint32 {5000}, uint32 {7890});
+
     }
 
 }

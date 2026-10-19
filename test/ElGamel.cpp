@@ -126,49 +126,49 @@ namespace crypto {
     // some toy cryptosystems for El Gamel
     // TODO these all ought to work in uint32 but they don't. '
     using El_Gamel_params = ::testing::Types<
-        ElGamel<math::prime_field<uint64 {271}> {uint64 {6}},  uint64 {270}>,
-        ElGamel<math::prime_field<uint64 {293}> {uint64 {2}},  uint64 {292}>,
-        ElGamel<math::prime_field<uint64 {307}> {uint64 {5}},  uint64 {306}>,
-        ElGamel<math::prime_field<uint64 {317}> {uint64 {2}},  uint64 {316}>,
-        ElGamel<math::prime_field<uint64 {353}> {uint64 {3}},  uint64 {352}>,
-        ElGamel<math::prime_field<uint64 {359}> {uint64 {7}},  uint64 {358}>,
-        ElGamel<math::prime_field<uint64 {367}> {uint64 {6}},  uint64 {366}>,
-        ElGamel<math::prime_field<uint64 {373}> {uint64 {2}},  uint64 {372}>,
-        ElGamel<math::prime_field<uint64 {383}> {uint64 {5}},  uint64 {382}>,
-        ElGamel<math::prime_field<uint64 {401}> {uint64 {3}},  uint64 {400}>,
-        ElGamel<math::prime_field<uint64 {419}> {uint64 {2}},  uint64 {418}>,
-        ElGamel<math::prime_field<uint64 {433}> {uint64 {5}},  uint64 {432}>,
-        ElGamel<math::prime_field<uint64 {439}> {uint64 {15}}, uint64 {438}>,
-        ElGamel<math::prime_field<uint64 {443}> {uint64 {2}},  uint64 {442}>,
-        ElGamel<math::prime_field<uint64 {449}> {uint64 {3}},  uint64 {448}>,
-        ElGamel<math::prime_field<uint64 {457}> {uint64 {13}}, uint64 {456}>,
-        ElGamel<math::prime_field<uint64 {461}> {uint64 {2}},  uint64 {460}>,
-        ElGamel<math::prime_field<uint64 {463}> {uint64 {3}},  uint64 {462}>,
-        ElGamel<math::prime_field<uint64 {467}> {uint64 {2}},  uint64 {466}>,
-        ElGamel<math::prime_field<uint64 {479}> {uint64 {13}}, uint64 {478}>,
-        ElGamel<math::prime_field<uint64 {487}> {uint64 {3}},  uint64 {486}>,
-        ElGamel<math::prime_field<uint64 {499}> {uint64 {7}},  uint64 {498}>,
-        ElGamel<math::prime_field<uint64 {503}> {uint64 {5}},  uint64 {502}>,
-        ElGamel<math::prime_field<uint64 {509}> {uint64 {2}},  uint64 {508}>,
-        ElGamel<math::prime_field<uint64 {739}> {uint64 {3}},  uint64 {738}>,
-        ElGamel<math::prime_field<uint64 {1117}> {uint64 {2}},  uint64 {1116}>,
-        ElGamel<math::prime_field<uint64 {3691}> {uint64 {2}},  uint64 {3690}>,
-        ElGamel<math::prime_field<uint64 {8147}> {uint64 {2}},  uint64 {8146}>,
-        ElGamel<math::prime_field<uint64 {12301}> {uint64 {2}},  uint64 {12300}>,
-        ElGamel<math::prime_field<uint64 {22721}> {uint64 {3}},  uint64 {22720}>,
-        ElGamel<math::prime_field<uint64 {64091}> {uint64 {2}},  uint64 {64090}>,
-        ElGamel<math::prime_field<uint64 {68281}> {uint64 {7}},  uint64 {68280}>,
-        ElGamel<math::prime_field<uint64 {143791}> {uint64 {6}},  uint64 {143790}>,
-        ElGamel<math::prime_field<uint64 {397973}> {uint64 {2}},  uint64 {397972}>,
-        ElGamel<math::prime_field<uint64 {941791}> {uint64 {6}},  uint64 {941790}>,
-        ElGamel<math::prime_field<uint64 {1981753}> {uint64 {10}},  uint64 {1981752}>,
-        ElGamel<math::prime_field<uint64 {2117513}> {uint64 {3}},  uint64 {2117512}>,
-        ElGamel<math::prime_field<uint64 {5846957}> {uint64 {2}},  uint64 {5846956}>,
-        ElGamel<math::prime_field<uint64 {13492253}> {uint64 {2}},  uint64 {13492252}>,
-        ElGamel<math::prime_field<uint64 {31976671}> {uint64 {11}},  uint64 {31976670}>,
-        ElGamel<math::prime_field<uint64 {49911149}> {uint64 {2}},  uint64 {49911148}>,
-        ElGamel<math::prime_field<uint64 {98046119}> {uint64 {13}},  uint64 {98046118}>,
-        ElGamel<math::prime_field<uint64 {114762779}> {uint64 {2}},  uint64 {114762778}>
+        ElGamel<math::prime_field<uint32 {271}>       {uint32 {6}},  uint32 {270}>,
+        ElGamel<math::prime_field<uint32 {293}>       {uint32 {2}},  uint32 {292}>,
+        ElGamel<math::prime_field<uint32 {307}>       {uint32 {5}},  uint32 {306}>,
+        ElGamel<math::prime_field<uint32 {317}>       {uint32 {2}},  uint32 {316}>,
+        ElGamel<math::prime_field<uint32 {353}>       {uint32 {3}},  uint32 {352}>,
+        ElGamel<math::prime_field<uint32 {359}>       {uint32 {7}},  uint32 {358}>,
+        ElGamel<math::prime_field<uint32 {367}>       {uint32 {6}},  uint32 {366}>,
+        ElGamel<math::prime_field<uint32 {373}>       {uint32 {2}},  uint32 {372}>,
+        ElGamel<math::prime_field<uint32 {383}>       {uint32 {5}},  uint32 {382}>,
+        ElGamel<math::prime_field<uint32 {401}>       {uint32 {3}},  uint32 {400}>,
+        ElGamel<math::prime_field<uint32 {419}>       {uint32 {2}},  uint32 {418}>,
+        ElGamel<math::prime_field<uint32 {433}>       {uint32 {5}},  uint32 {432}>,
+        ElGamel<math::prime_field<uint32 {439}>       {uint32 {15}}, uint32 {438}>,
+        ElGamel<math::prime_field<uint32 {443}>       {uint32 {2}},  uint32 {442}>,
+        ElGamel<math::prime_field<uint32 {449}>       {uint32 {3}},  uint32 {448}>,
+        ElGamel<math::prime_field<uint32 {457}>       {uint32 {13}}, uint32 {456}>,
+        ElGamel<math::prime_field<uint32 {461}>       {uint32 {2}},  uint32 {460}>,
+        ElGamel<math::prime_field<uint32 {463}>       {uint32 {3}},  uint32 {462}>,
+        ElGamel<math::prime_field<uint32 {467}>       {uint32 {2}},  uint32 {466}>,
+        ElGamel<math::prime_field<uint32 {479}>       {uint32 {13}}, uint32 {478}>,
+        ElGamel<math::prime_field<uint32 {487}>       {uint32 {3}},  uint32 {486}>,
+        ElGamel<math::prime_field<uint32 {499}>       {uint32 {7}},  uint32 {498}>,
+        ElGamel<math::prime_field<uint32 {503}>       {uint32 {5}},  uint32 {502}>,
+        ElGamel<math::prime_field<uint32 {509}>       {uint32 {2}},  uint32 {508}>,
+        ElGamel<math::prime_field<uint32 {739}>       {uint32 {3}},  uint32 {738}>,
+        ElGamel<math::prime_field<uint32 {1117}>      {uint32 {2}},  uint32 {1116}>,
+        ElGamel<math::prime_field<uint32 {3691}>      {uint32 {2}},  uint32 {3690}>,
+        ElGamel<math::prime_field<uint32 {8147}>      {uint32 {2}},  uint32 {8146}>,
+        ElGamel<math::prime_field<uint32 {12301}>     {uint32 {2}},  uint32 {12300}>,
+        ElGamel<math::prime_field<uint32 {22721}>     {uint32 {3}},  uint32 {22720}>,
+        ElGamel<math::prime_field<uint32 {64091}>     {uint32 {2}},  uint32 {64090}>,
+        ElGamel<math::prime_field<uint32 {68281}>     {uint32 {7}},  uint32 {68280}>,
+        ElGamel<math::prime_field<uint32 {143791}>    {uint32 {6}},  uint32 {143790}>,
+        ElGamel<math::prime_field<uint32 {397973}>    {uint32 {2}},  uint32 {397972}>,
+        ElGamel<math::prime_field<uint32 {941791}>    {uint32 {6}},  uint32 {941790}>,
+        ElGamel<math::prime_field<uint32 {1981753}>   {uint32 {10}}, uint32 {1981752}>,
+        ElGamel<math::prime_field<uint32 {2117513}>   {uint32 {3}},  uint32 {2117512}>,
+        ElGamel<math::prime_field<uint32 {5846957}>   {uint32 {2}},  uint32 {5846956}>,
+        ElGamel<math::prime_field<uint32 {13492253}>  {uint32 {2}},  uint32 {13492252}>,
+        ElGamel<math::prime_field<uint32 {31976671}>  {uint32 {11}}, uint32 {31976670}>,
+        ElGamel<math::prime_field<uint32 {49911149}>  {uint32 {2}},  uint32 {49911148}>,
+        ElGamel<math::prime_field<uint32 {98046119}>  {uint32 {13}}, uint32 {98046118}>,
+        ElGamel<math::prime_field<uint32 {114762779}> {uint32 {2}},  uint32 {114762778}>
     >;
 
     TYPED_TEST_SUITE (ElGamelTest, El_Gamel_params);
@@ -180,8 +180,8 @@ namespace crypto {
         constexpr static const auto Generator = TestFixture::Generator;
         constexpr static const auto Order = TestFixture::Order;
 
-        test_ElGamel<G> {}.encryption (r_eg, uint64 {25}, uint64 {83});
-        test_ElGamel<G> {}.signature (r_eg, uint64 {77}, uint64 {124});
+        test_ElGamel<G> {}.encryption (r_eg, uint32 {25}, uint32 {83});
+        test_ElGamel<G> {}.signature (r_eg, uint32 {77}, uint32 {124});
     }
 
 }

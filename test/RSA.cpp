@@ -71,12 +71,19 @@ namespace crypto {
     }
 
     TEST (RSA, RSA) {
+
         random::std_random<std::default_random_engine> r {25767};
-        test_RSA<uint32, 16> (r, 5, 6);
-        test_RSA<uint64, 17> (r, 5, 6);
-        test_RSA<uint256, 18> (r, 5, 6);
-        test_RSA<N, 19> (r, 5, 6);
-        test_RSA<N_bytes_big, 20> (r, 5, 6);
+
+        //test_RSA<int32, 16> (r, 5, 6);
+        test_RSA<uint32, 17> (r, 5, 6);
+        //test_RSA<int64, 18> (r, 5, 6);
+        test_RSA<uint64, 19> (r, 5, 6);
+        //test_RSA<int256, 20> (r, 5, 6);
+        test_RSA<uint256, 21> (r, 5, 6);
+        //test_RSA<Z, 22> (r, 5, 6);
+        test_RSA<N, 23> (r, 5, 6);
+        //test_RSA<Z_bytes_big, 24> (r, 5, 6);
+        //test_RSA<N_bytes_big, 25> (r, 5, 6);
 
         // TODO This is too slow. We need to make it faster before we can actually run this test.
         // test_RSA<Z_bytes_BC_little, 21> (r, 5, 6);

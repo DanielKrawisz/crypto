@@ -37,6 +37,10 @@ namespace crypto {
             encrypted encrypt (const message &m) const {
                 return Rabin::encrypt (m, *this);
             }
+
+            friend std::ostream &operator << (std::ostream &o, const pubkey &p) {
+                return o << p.N;
+            }
         };
 
         struct secret {
@@ -44,6 +48,7 @@ namespace crypto {
             math::number::prime<natural> Q;
 
             secret (): P {}, Q {} {}
+            secret (const math::number::prime<natural> &p, const math::number::prime<natural> &q): P {p}, Q {q} {}
 
             pubkey to_public () const {
                 if (!data::valid (N)) N = math::nonzero {P.Value * Q.Value};
@@ -64,6 +69,7 @@ namespace crypto {
                 natural qp = mq * P.Value * *B;
                 natural pn = negate_mod (pp, N);
                 natural qn = negate_mod (qp, N);
+
                 return set<message> {
                     mod (pp + qp, N),
                     mod (pp + qn, N),
@@ -81,6 +87,10 @@ namespace crypto {
 
                     if (k.valid ()) return oo;
                 }
+            }
+
+            friend std::ostream &operator << (std::ostream &o, const secret &z) {
+                return o << "{" << z.P << ", " << z.Q << "}";
             }
 
         private:

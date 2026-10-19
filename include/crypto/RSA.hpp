@@ -8,6 +8,7 @@
 #include <data/math/number/NTL/random.hpp>
 #include <data/numbers.hpp>
 #include <data/math/number/factor.hpp>
+#include <data/math/number/extended_euclidian.hpp>
 #include <crypto/random.hpp>
 #include <crypto/hash.hpp>
 
@@ -45,6 +46,10 @@ namespace crypto {
                 return RSA::encrypt (e, *this);
             }
 
+            friend std::ostream &operator << (std::ostream &o, const pubkey &p) {
+                return o << "{" << p.N << ", " << p.E << "}";
+            }
+
         };
 
         struct secret {
@@ -62,6 +67,10 @@ namespace crypto {
 
             message decrypt (const encrypted &c) const {
                 return RSA::decrypt (c, *this);
+            }
+
+            friend std::ostream &operator << (std::ostream &o, const secret &z) {
+                return o << "{" << z.P << ", " << z.Q << ", " << z.D << "}";
             }
 
         private:
@@ -128,7 +137,7 @@ namespace crypto {
 
             if (difference <= min_difference) continue;
 
-            natural carmichael = LCM (p.Value - 1u, q.Value - 1u);
+            natural carmichael = LCM (p.Value - 1, q.Value - 1);
 
             maybe<natural> d = invert_mod (e, math::nonzero {carmichael});
 
@@ -143,7 +152,7 @@ namespace crypto {
     template <Number num, size_t bits>
     RSA<num, bits>::pubkey RSA<num, bits>::secret::to_public () const {
 
-        natural carmichael = LCM (P.Value - 1u, Q.Value - 1u);
+        natural carmichael = LCM (P.Value - 1, Q.Value - 1);
 
         maybe<natural> e = invert_mod (D, math::nonzero {carmichael});
 
