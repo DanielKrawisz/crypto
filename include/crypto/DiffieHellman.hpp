@@ -53,7 +53,8 @@ namespace crypto {
     };
 
     template <typename N, auto gen, auto order>
-    struct diffie_hellman : group<gen, order> {};
+    // TODO can generalize to elliptic curves.
+    struct diffie_hellman : multiplicative_group<gen, order> {};
 
     // standard primes for prime field diffie helman.
     namespace rfc3526 {

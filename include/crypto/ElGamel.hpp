@@ -11,13 +11,14 @@ namespace crypto {
 
     // prime field required. For prime P, order is P - 1. Generator may not
     // generate entire multiplicative group.
+    // TODO can generalize to elliptic curves.
     template <auto gen, auto order>
     requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
-    struct ElGamel : group<gen, order> {
+    struct ElGamel : multiplicative_group<gen, order> {
 
         // it is required that order == P - 1, where P is the order of the prime field.
 
-        using G = group<gen, order>;
+        using G = multiplicative_group<gen, order>;
 
         using scalar = G::scalar;
         using element = G::element;
@@ -34,6 +35,7 @@ namespace crypto {
         struct signature {
             element R;
             scalar S;
+
             bool operator == (const signature &x) const;
         };
 
@@ -59,16 +61,22 @@ namespace crypto {
         static secret generate_key (random::source &oo);
 
         struct pubkey : element {
-            using group<gen, order>::element::element;
+            using element::element;
+            pubkey (element &&e) : element {e} {}
 
             encrypted encrypt (const message &m, random::source &oo);
 
             encrypted encrypt (const message &m, function<secret ()> &f);
 
             bool verify (const signature &x, const digest &h);
+
+            bool operator == (const pubkey &y) const {
+                return static_cast<const element &> (*this) == static_cast<const element &> (y);
+            }
         };
 
         struct secret : scalar {
+            using scalar::scalar;
             pubkey to_public () const;
 
             bool valid () const;
@@ -80,19 +88,21 @@ namespace crypto {
 
             friend random::source &operator >> (random::source &r, secret &k) {
                 while (true) {
-                    group<gen, order>::generate (r, k);
+                    multiplicative_group<gen, order>::random (r, k);
                     // if the scalar we get happens to be zero,
                     // the key is invalid. This is unlikely and
                     // we just try again.
                     if (k.valid ()) return r;
                 }
             }
+
+            secret (scalar &&s): scalar {s} {}
         };
     };
 
     template <auto gen, auto order>
     requires PrimeField<decltype (gen)> && (order == decltype (gen)::Modulus - 1)
-    ElGamel<gen, order>::secret ElGamel<gen, order>::generate_key (random::source &oo) {
+    ElGamel<gen, order>::secret inline ElGamel<gen, order>::generate_key (random::source &oo) {
         secret k;
         oo >> k;
         return k;

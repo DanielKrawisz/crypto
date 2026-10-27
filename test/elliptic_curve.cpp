@@ -4,16 +4,14 @@
 
 #include <gtest/gtest.h>
 
-#include <crypto/elliptic_curve.hpp>
-
 #include <data/math/algebra/finite_field.hpp>
+#include <data/math/algebra/elliptic_curve.hpp>
+#include <crypto/ECDSA.hpp>
+#include <crypto/ECIES.hpp>
+
 #include <data/numbers.hpp>
 
-namespace data::math {
-
-}
-
-namespace data::crypto {
+namespace crypto {
 
     struct secp192k1 {
 
@@ -23,11 +21,11 @@ namespace data::crypto {
         using coord = math::prime_field<scalar {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFEE37"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             coord {"0x000000000000000000000000000000000000000000000000"},
             coord {"0x000000000000000000000000000000000000000000000003"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {
@@ -54,11 +52,11 @@ namespace data::crypto {
         using coord = math::prime_field<scalar {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             coord {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFC"},
             coord {"0x64210519E59C80E70FA7E9AB72243049FEB8DEECC146B9B1"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {
@@ -86,11 +84,11 @@ namespace data::crypto {
         using coord = math::prime_field<uint224 {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFE56D"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             coord {"0x00000000000000000000000000000000000000000000000000000000"},
             coord {"0x00000000000000000000000000000000000000000000000000000005"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {
@@ -117,11 +115,11 @@ namespace data::crypto {
         using coord = math::prime_field<scalar {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             coord {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFE"},
             coord {"0xB4050A850C04B3ABF54132565044B0B7D7BFD8BA270B39432355FFB4"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {
@@ -149,11 +147,11 @@ namespace data::crypto {
         using coord = math::prime_field<scalar {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             coord {"0x0000000000000000000000000000000000000000000000000000000000000000"},
             coord {"0x0000000000000000000000000000000000000000000000000000000000000007"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {
@@ -180,11 +178,11 @@ namespace data::crypto {
         using coord = math::prime_field<scalar {"0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             coord {"0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC"},
             coord {"0x5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {
@@ -212,11 +210,11 @@ namespace data::crypto {
         using coord = math::prime_field<scalar {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFF"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             coord {"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFC"},
             coord {"0xB3312FA7E23EE7E4988E056BE3F82D19181D9C6EFE8141120314088F5013875AC656398D8A2ED19D2A85C8EDD3EC2AEF"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {
@@ -246,7 +244,7 @@ namespace data::crypto {
             "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"}>;
 
         // the curve
-        constexpr static const math::Weierstrauss<scalar, coord> curve {
+        constexpr static const math::algebra::Weierstrass<coord, scalar> curve {
             scalar {"0x000001FF"
                 "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
                 "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC"},
@@ -254,7 +252,7 @@ namespace data::crypto {
                 "953EB9618E1C9A1F929A21A0B68540EEA2DA725B99B315F3B8B489918EF109E1"
                 "56193951EC7E937B1652C0BD3BB1BF073573DF883D2C34F1EF451FD46B503F00"}};
 
-        using affine_point = math::elliptic_curve<curve>::affine_point;
+        using affine_point = math::space::vector<coord, 2>;
 
         // the base point
         constexpr static const affine_point base {

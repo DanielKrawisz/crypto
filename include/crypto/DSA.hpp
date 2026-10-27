@@ -15,9 +15,10 @@ namespace crypto {
     // the multiplicative group mod P.
     // it is optimal to use a so-called "safe" prime.
     template <auto gen, auto order> requires PrimeField<decltype (gen)>
-    struct DSA : group<gen, order> {
+    // TODO we can generalize to elliptic curves, although you should actually use ECDSA if you want to use elliptic curves.
+    struct DSA : multiplicative_group<gen, order> {
 
-        using G = group<gen, order>;
+        using G = multiplicative_group<gen, order>;
 
         struct scalar : math::prime_field<order, decltype (gen.Value)> {
             using math::prime_field<order, decltype (gen.Value)>::prime_field;
@@ -54,7 +55,13 @@ namespace crypto {
 
         struct pubkey : element {
             using element::element;
+            pubkey (element &&e): element {e} {}
+            pubkey (const element &e) : element {e} {}
             bool verify (const signature &x, const digest &h) const;
+
+            bool operator == (const pubkey &y) const {
+                return static_cast<const element &> (*this) == static_cast<const element &> (y);
+            }
         };
 
         struct secret : scalar {
@@ -65,7 +72,7 @@ namespace crypto {
 
             friend random::source &operator >> (random::source &oo, secret &k) {
                 while (true) {
-                    group<gen, order>::generate (oo, k);
+                    multiplicative_group<gen, order>::random (oo, k);
                     if (k.valid ()) return oo;
                 }
             }
@@ -124,7 +131,7 @@ namespace crypto {
 
     template <auto gen, auto order> requires PrimeField<decltype (gen)>
     DSA<gen, order>::pubkey inline DSA<gen, order>::secret::to_public () const {
-        return group<gen, order>::exp (gen, *this);
+        return pubkey {multiplicative_group<gen, order>::exp (gen, *this)};
     }
 
     template <auto gen, auto order> requires PrimeField<decltype (gen)>
